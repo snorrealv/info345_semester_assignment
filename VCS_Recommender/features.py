@@ -1,13 +1,15 @@
+import logging
 import os
+import warnings
+from collections import Counter
+
 import cv2
 import numpy as np
+import requests
 from skimage.filters.rank import entropy
 from skimage.morphology import disk
 from sklearn.cluster import KMeans
-import logging
-import requests
-from collections import Counter
-import warnings
+
 
 # ================================ FEATURES ==================================
 # This class takes 3 parameters, filename, filepath and url. filename is the
