@@ -401,6 +401,7 @@ VCS/
 .fleet
 */.DS_Store
 .DS_Store
+.idea
 
 # Files ignored due to copyright (data)
 data/all_recipes/BMJ-data-all--b-new.csv
