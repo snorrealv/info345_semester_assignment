@@ -396,3 +396,16 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+VCS/
+
+.fleet
+*/.DS_Store
+.DS_Store
+
+# Files ignored due to copyright (data)
+data/all_recipes/BMJ-data-all--b-new.csv
+data/all_recipes/item-profiles1.csv
+data/all_recipes/item-profiles2.csv
+data/all_recipes/item-profiles3.csv
+data/all_recipes/readme.txt
+data/all_recipes/user-item-rating.csv
