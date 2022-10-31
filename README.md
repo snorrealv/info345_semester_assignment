@@ -1,4 +1,4 @@
-* [X] Sette opp WebApp - Snorre
+* [ ] Sette opp WebApp - Snorre
   * [ ] Sette opp
   * [ ] Tilpasse brukerstudie
   * [ ] Implementere nye algorytmer
