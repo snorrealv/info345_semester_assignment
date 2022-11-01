@@ -58,7 +58,7 @@ if (!file_exists($index_file)) {
     
     $data = null;
     
-    $file = fopen($_SERVER['DOCUMENT_ROOT'].'/Food/visual_data.csv', 'r');
+    $file = fopen($_SERVER['DOCUMENT_ROOT'].'visual_data.csv', 'r');
     
     while (($line = fgetcsv($file,0, "\t")) !== FALSE) {
         //$line is an array of the csv elements

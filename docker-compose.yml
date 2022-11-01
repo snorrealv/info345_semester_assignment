@@ -1,0 +1,53 @@
+version: '3.8'
+
+services: 
+  nginx:
+    build: ./nginx/
+    container_name: nginx-container
+    ports:
+      - 80:80
+    networks:
+      - webapp_network
+    volumes:
+      - ./webapp:/var/www/html/
+    depends_on:
+      - db2
+  php:
+    build: ./php/
+    container_name: php-container
+    expose:
+      - 9000
+    networks:
+      - webapp_network
+    volumes:
+      - ./webapp:/var/www/html/
+    depends_on:
+      - db2
+    environment:
+        DB_HOST: 'db2'
+        DB_NAME: 'mydb'
+        DB_USER: myuser  
+        DB_PASSWORD: 'password'
+        DB_PORT: '3306'
+        MYSQL_ROOT_PASSWORD: 'admin'
+      
+  db2:    
+      image: mysql:latest
+      container_name: mysql-container  
+      volumes:  
+        - ./mysql_data:/var/lib/mysql
+      networks:
+        - webapp_network
+      environment:  
+        - MYSQL_ROOT_PASSWORD = 'secret'  
+        - MYSQL_DATABASE = 'mydb'
+        - MYSQL_USER = myuser 
+        - MYSQL_PASSWORD = 'password'
+      ports:
+        - '3306:3306'
+
+
+
+networks:
+  webapp_network:
+    driver: bridge
