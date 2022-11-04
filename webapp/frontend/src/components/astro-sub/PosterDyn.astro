@@ -1,0 +1,223 @@
+---
+import secrets from '../../../secrets.json'
+export interface Props {
+    title: string,
+    body?: string,
+    href?: string,
+	questionId: string,
+    usierId?: string,
+    reccommendation?: string,
+}
+const {href, title, body, questionId} = Astro.props;
+// const response = await fetch('http://127.0.0.1:8000/movies/random/5')
+// const movies = await response.json();
+
+---
+<li class="likard">
+	<div class="likard-cont-mov" id={`${questionId}`}>
+		<h2>
+			{questionId}. {title} 
+		</h2>
+		<p>
+			{body}
+		</p>
+    <ul id={'ul_' + questionId}>
+
+    </ul>
+	</div>
+</li>
+
+<script is:inline defer>
+    // Function that grabs dynamicly delivered movies based on userId
+    // This will need to be inserted into the main form page, and not on each 
+    // component, as we only want to run it once!
+    console.log('Function Sprung')
+    function loadContent() {
+        const collections = document.getElementsByClassName("likard-cont-mov")
+        var arr = Array.prototype.slice.call( collections )
+        arr.forEach(item => {
+            getImages(item.id)
+        })
+        
+    }
+
+    // Function that grabs image from tmdb api route
+    async function getImages(questionId) {
+        try {
+        const response = await fetch('http://127.0.0.1:8000/movies/random/1/', {
+            
+        });
+        
+        if (!response.ok) {
+           throw new Error(`Error! status ${response.status}`);
+        }
+        
+        const results = await response.json()
+        
+        //console.log('Pressed')
+        //console.log(results)
+        
+        const element = document.getElementById(`ul_${questionId}`);
+
+        // Checks if we already created these items
+        if (element.children.length < 5) {
+            results.forEach(result => {
+            
+            // create list element
+            var newNode = document.createElement('li');
+
+            // apply style to li element:
+            newNode.style.display='flex';
+            newNode.style.flexDirection='column';
+            newNode.style.paddingLeft='0px';
+            newNode.style.width='20%';
+
+
+            //create innerHTML
+            const src = getImageFromSource(result.links[0].tmdbId);
+            newNode.innerHTML = `
+                                <img style='width: 100%; object-fit: contain;' src=${src} ></img>
+                                <p>${result.title}</p>
+                                `
+            
+            
+            element.appendChild(newNode);
+
+        });
+        }
+        // add movies
+        
+        }   catch (err) {
+            console.log(err)
+            }
+        
+    }
+    // This function is beeing wierd, we'll return to it later.
+    // for now, we simply return a static image of a fun movie
+    function getImageFromSource(tmdbId) {
+        /*
+        const response = fetch(`http://127.0.0.1:8000/movies/image/${tmdbId}`).then((result) => 
+            result.json()
+        ).then((data) => {
+            console.log(data)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+        //const imageid = '123'
+        */
+        const response = 'uFyvNaYSCu5Vr55lEn6cYfJ1A3P.jpg'
+        const src = `https://image.tmdb.org/t/p/w200/` + response
+        return src
+    }
+
+    loadContent()
+</script>
+
+
+<style>
+
+    :root {
+		--link-gradient2: linear-gradient(45deg, #4F39FA, #DA62C4 5%, var(--color-border) 10%);
+		--link-gradient: linear-gradient(45deg, #F1F1F1, #221f20 5%, var(--color-border) 10%);
+	}
+
+	* { min-width: 0; min-height: 0; list-style: none;}
+
+	.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+		background-image: var(--link-gradient);
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	.likard-cont-mov {
+		width: 93%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		opacity: 0.8;
+		background-color: white;
+		list-style: none;
+	}
+
+	.likard > .likard-cont-mov > .forms {
+		display: flex;
+		justify-content: center;
+		padding-top: 1rem;
+		padding-right: 1rem;
+		}
+	
+
+	.likard > .likard-cont-mov > ul{
+		display: flex;
+		flex-direction: row;
+		list-style: none;
+		padding-left: 0px;
+	}
+	.likard > .likard-cont-mov > ul >li{
+		flex-direction: column;
+		width: 20%;
+		list-style: none;
+	}
+    .image_li {
+        flex-direction: column;
+		width: 20%;
+		list-style: none;
+    }
+
+    .poster {
+        width: 100%;
+        object-fit: contain;
+    }
+
+	.likard > .likard-cont-mov > div > form > span {
+		padding-left: 4rem;
+		display: inline-block;
+	}
+	
+	.likard > .likard-cont-mov > div > form > span > input {		
+		border: 0px;
+    	height: 1rem;
+		width: 100%;
+	}
+
+	.likard > .likard-cont-mov > form > span > label{
+		padding-left: 1rem;
+	}
+
+	
+	.likard > .likard-cont-mov > a{		
+		text-decoration: none;
+		line-height: 1.4;
+		color: var(--text-color);		
+	}
+
+	h2 {
+		margin: 0;
+		display: inline-block;
+		list-style: none;
+	}
+    
+    p {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+
+
+	.likard:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	.likard:is(:hover, :focus-within) h2 {
+		color: #221f20;
+		transform: translateX(2px);
+	}
+
+
+</style>

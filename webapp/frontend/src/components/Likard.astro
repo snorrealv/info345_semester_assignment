@@ -1,0 +1,120 @@
+---
+export interface Props {
+    title?: string,
+    body: string,
+    href?: string,
+	questionId: string,
+    choices?,
+}
+
+const {href, title, body, questionId='', choices = ['Strongly Agree','Agree', 'Neither agree nor disagree', 'Disagree', 'Strongly Disagree']} = Astro.props;
+---
+<li class="likard">
+	<div class="likard-cont">
+		<a href={href}>
+			<h2>
+				Q{questionId}. {title}
+			</h2>
+			<p>
+				{body}
+				<slot/>
+			</p>
+		</a>
+		<div class="forms">
+		<form id={questionId} class='radioBoolForm'>
+            {choices.map((Q, i) => (
+                <label for={`${i}`}>
+                <input type='radio' name={questionId} value={`${i}`}/>
+                {`${Q}`}
+                </label> 
+            ))}
+				
+			
+		</form>
+		</div>
+	</div>
+</li>
+
+
+<style>
+
+	:root {
+		--link-gradient2: linear-gradient(45deg, #4F39FA, #DA62C4 5%, var(--color-border) 10%);
+	}
+
+	.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+		background-image: var(--link-gradient);
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+	}
+	.likard-cont {
+		width: 93%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		opacity: 0.8;
+		background-color: white;
+	}
+
+	.likard > .likard-cont > .forms {
+		}
+
+	.likard > .likard-cont > div > form > span {
+		padding-left: 4rem;
+		padding-top: 3rem;
+		display: inline-block;
+	}
+	.radioBoolForm {
+		display: flex;
+		padding-right: 1rem;
+		flex-direction: ;
+	}
+	
+	.likard > .likard-cont > div > form > span > input {		
+		border: 0px;
+    	height: 1rem;
+		width: 100%;
+	}
+
+	.likard > .likard-cont > div > form {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.radioBoolForm  > label{
+		padding-left: 1rem;
+		padding-top: 1rem;
+	}
+
+	
+	.likard > .likard-cont > a{		
+		text-decoration: none;
+		line-height: 1.4;
+		color: var(--text-color);		
+	}
+
+	h2 {
+		margin: 0;
+		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		display: inline-block;
+		
+	}
+    
+    p {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+	.likard:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	.likard:is(:hover, :focus-within) h2 {
+		transform: translateX(2px);
+	}
+</style>

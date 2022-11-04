@@ -1,0 +1,207 @@
+---
+export interface Props {
+    title: string,
+    body?: string,
+    href?: string,
+}
+const {href, title, body} = Astro.props;
+---
+
+<li class="likard">
+	<div class="likard-cont">
+	{title}
+        <div >
+            <ul class="picksClass"></ul>
+        </div>
+        <div class="wrapper">
+
+            <div class="search-input">
+              <a href="" target="_blank" hidden></a>
+              <input class='searchBox' type="text" placeholder="Type to search..">
+              <div class="autocom-box">
+                <!-- here list are inserted from javascript -->
+              </div>
+            </div>
+          </div>
+    </div>
+</li>
+
+
+<script is:inline>
+// getting all required elements
+const searchWrapper = document.getElementsByClassName("search-input")[0];
+const inputBox = document.getElementsByClassName("searchBox")[0];
+const suggBox = document.getElementsByClassName("autocom-box")[0];
+const picksBox = document.getElementsByClassName("picksClass")[0];
+
+
+
+let picks = [
+];
+
+function selectSelf(element){
+    inputBox.value = '';
+    //element.style.all='unset'
+    element.classList='selectedMovie'
+    let liObject = document.createElement('li')
+    element.setAttribute('onclick', 'removeSelf(this)')
+    liObject.appendChild(element)
+    console.log(liObject, 'listobject')
+
+    //let picked = `<li id=${element.id}>${element.textContent}</li>`
+    //picks.push(liObject)
+    //showPicks(picks)
+    picksBox.appendChild(liObject)
+    searchWrapper.classList.remove("active");
+    suggBox.innerHTML = ''
+}
+
+function removeSelf(el){
+    var element = el.parentElement;
+    element.remove();
+}
+
+function showSuggestions(list){
+    let listData;
+    if(list.length === 0){
+        console.log('I am activated')
+        listData = '<li>'+ 'None' +'</li>';
+    }else{
+        listData = list.join('');
+    }
+    suggBox.innerHTML = listData;
+}
+
+// if user press any key and release
+inputBox.addEventListener('keyup', function(e) {
+    let userData = e.target.value; //user enetered data
+    let emptyArray = [];
+    if(userData){
+        fetch(`http://0.0.0.0/api/movies?search=${userData}`)
+        .then(response => response.json())
+        .then(results => {
+		console.log(results.results)
+        results.results.forEach(item => {
+            console.log(item.title)
+            emptyArray.push('<li>' + `<button class="buttonSelect" id=${item.movieId} onClick=selectSelf(this)>` + item.title + '</button>' + '</li>')
+            
+        })
+        showSuggestions(emptyArray);
+    })
+        searchWrapper.classList.add("active"); //show autocomplete box
+        
+    }else{
+        searchWrapper.classList.remove("active"); //hide autocomplete box
+    }
+    
+})
+
+
+
+</script>
+
+<style>
+::selection{
+  color: #fff;
+  background: #000;
+}
+
+.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+		background-image: var(--link-gradient);
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	.likard-cont {
+		width: 96%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		opacity: 0.8;
+		background-color: white;
+		list-style: none;
+	}
+
+
+.wrapper{
+  max-width: 582px;
+}
+
+.wrapper .search-input{
+  background: #fff;
+  width: 100%;
+  border-radius: 5px;
+  position: relative;
+
+}
+
+.search-input input{
+  height: 55px;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 0 60px 0 20px;
+  font-size: 18px;
+  box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+}
+
+.search-input.active input{
+  border-radius: 5px 5px 0 0;
+}
+
+.search-input .autocom-box{
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.search-input.active .autocom-box{
+  padding: 10px 8px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.autocom-box li{
+  list-style: none;
+  padding: 8px 12px;
+  display: none;
+  width: 100%;
+  cursor: default;
+  border-radius: 3px;
+}
+
+.search-input.active .autocom-box li{
+  display: block;
+}
+.autocom-box li:hover{
+  background: #f2f2f2;
+}
+
+</style>
+
+  <!-- We have to make this global to avoid Astro hydrating it alongside the rest. -->
+<style is:global>
+    .selectedMovie {
+        all: unset;
+        cursor: pointer;
+    }
+	.selectedMovie:hover {
+	text-decoration: line-through;
+    }
+    .buttonSelect {
+        all:unset;
+        cursor: pointer;
+    }
+    .buttonSelect:hover {
+        font-style: italic;
+        size-adjust: 10%;
+    }
+</style>

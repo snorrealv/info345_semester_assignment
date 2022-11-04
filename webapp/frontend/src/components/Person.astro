@@ -1,0 +1,101 @@
+---
+export interface Props {
+    title?: string,
+    img?:string,
+}
+const {href, title, body, img='https://100k-faces.glitch.me/random-image'} = Astro.props;
+const person = 'https://100k-faces.glitch.me/random-image'
+---
+<li class="likard">
+	<div class="likard-cont">
+        <div class='one'>
+            <img src={img} alt="">
+        </div>
+        <div class='two'>
+            <slot/> 
+        </div>
+	</div>
+</li>
+
+
+<style>
+    .one {
+        max-width: 30%;
+        padding-right: 1rem;
+    }
+    .one > img {
+        width: 100%;
+        border-radius: 1.5rem;
+        border: 1px solid #221f20;
+    }
+	.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+		background-image: var(--link-gradient);
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	.likard-cont {
+		width: 93%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		background-color: white;
+        display: flex;
+	}
+
+	.likard > .likard-cont > .forms {
+		display: flex;
+		justify-content: center;
+		padding-top: 1rem;
+		padding-right: 1rem;
+		}
+
+	.likard > .likard-cont > div > form > span {
+		padding-left: 4rem;
+		display: inline-block;
+	}
+	
+	.likard > .likard-cont > div > form > span > input {		
+		border: 0px;
+    	height: 1rem;
+		width: 100%;
+	}
+
+	.likard > .likard-cont > form > span > label{
+		padding-left: 1rem;
+	}
+
+	
+	.likard > .likard-cont > a{		
+		text-decoration: none;
+		line-height: 1.4;
+		color: var(--text-color);		
+	}
+
+	h2 {
+		margin: 0;
+		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		display: inline-block;
+		
+	}
+    
+    p {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+
+	.likard:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	.likard:is(:hover, :focus-within) h2 {
+		color: #221f20;
+		transform: translateX(2px);
+	}
+</style>

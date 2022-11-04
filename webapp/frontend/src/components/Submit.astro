@@ -1,0 +1,379 @@
+---
+export interface Props {
+		redirect?: string,
+		train?: boolean,
+		final?: boolean
+    }
+const {id, redirect, train = false, final= false} = Astro.props;
+
+
+// Down the road i intend to make is so that you can set the URL in attributes,
+
+// The way we parse elements
+const functionCall = `postForms("${redirect}")`
+---
+<button class="form-submit-button" onclick={functionCall}>Next</button>
+
+<script is:inline define:vars={{train, final}}>
+
+	// Checks if user has uId cookie, if not we create one where the length is 5
+	if (!getCookie('uId')) {
+		setCookie('uId', makeid(5), 1)
+	}
+
+	var uId = getCookie('uId')
+	//const csrfToken = getCookie('sessionid');
+	//const csrfToken = getCookie('csrftoken');
+
+	// Json Object we want to send
+	var jsonObj  = {answers:{},
+					train_on_submission : train,
+					final_submission : final,
+                    userId : uId,
+					pageId : document.title
+	}
+
+	// Array to hold ratings to be sent in another query
+	var movieRatings = []
+	
+	// Array to hold formId from forms not filled.
+	var notFilled = []
+	
+	// Used to store recommendations to django backend
+	// Get form answers
+	function postForms (url){
+		// Check each of the forms in our document
+		console.log(document.forms)
+
+		for(let i = 1; i - 1 < document.forms.length; i++){
+			getAnswers(i)
+		}
+		// Executes only if we have filled all boxes
+		if (document.getElementsByClassName('movieForm').length != 0) {
+			if (movieRatings.length < 10) {
+				alert('Please choose minimum 10 movies!')
+				return 0
+			}
+		}
+
+
+		if (notFilled.length == 0) {
+			if (movieRatings.length > 0) {
+				console.log('Sent ratings')
+				makeCallRatings(movieRatings, url).then(() => makeCallRed(jsonObj, url))
+			}
+			else {
+				makeCallRed(jsonObj, url)
+			} 
+		}
+		else {
+			// create alert
+			//alert(notFilled)
+			notFilled.forEach((element) => {
+				document.getElementById(element).closest('li').style.borderStyle = 'solid'
+			});
+
+			const elem = document.getElementById(notFilled[0])
+			const elemDiv = elem.closest('li')
+			console.log(elemDiv)
+			
+			elemDiv.scrollIntoView({behavior: "smooth", block: "start"});
+
+			notFilled = []
+			
+		}
+		// If we have movieform & movieform show, we need to check lenght
+
+
+	}
+	
+
+	// Function that finds all answers, and adds then to notFilled list if not filled.
+	function getAnswers(formId) {
+		// Declare vars
+		var form = document.getElementById(formId);
+		var allAreAnswered = false		
+		var answer;
+
+		// Validate answers
+
+		// Radio
+		if (form.classList.contains('radioLikardForm')) {
+			console.log('This is a radioLikardForm')
+				var rForm = form.children
+				var answers = []
+
+				for(var i = 0; i < rForm.length; i++){
+					console.log(i, rForm[i].children[0].checked, rForm[i].textContent.trim())
+					
+					// if checked:
+					if (rForm[i].children[0].checked) {
+						// we take into consideration that input is the first.
+						answers.push(rForm[i].textContent.trim()); // see firstChild!!
+						allAreAnswered = true;
+					}
+					else {
+						notFilled.push(form.id)
+					}
+				}
+
+				// add answer to Json
+				const ident = "question_" + formId // id for json
+				jsonObj.answers[ident] = answers
+		
+		}
+
+		// Textbox
+		if (form[0].type === 'text') {
+				// check if empty
+				console.log('This is text')
+				if (form[0].value === '') {
+					allAreAnswered = false;
+					notFilled.push(form.id)
+				}
+				else {
+					console.log('Text!')
+					answer = form[0].value;
+					var ident = "question_" + formId
+					jsonObj.answers[ident] = answer
+					allAreAnswered = true;
+
+				}
+			}
+		
+		// Checkbox
+		if (form.classList.contains('checkboxForm')) {
+				console.log('This is a checkbox')
+				var rForm = form.children
+				var answers = []
+				for(var i = 0; i < rForm.length; i++){
+					console.log(i, rForm[i].children[0].checked, rForm[i].textContent.trim())
+					
+					// if checked:
+					if (rForm[i].children[0].checked) {
+						// we take into consideration that input is the first.
+						answers.push(rForm[i].textContent.trim()); // see firstChild!!
+						allAreAnswered = true;
+					}
+				}
+				if (!allAreAnswered) {
+					notFilled.push(form.id)
+				}
+
+				// add answer to Json
+				const ident = "question_" + formId // id for json
+				jsonObj.answers[ident] = answers
+
+		}
+
+		// Checkbox
+		if (form.classList.contains('radioBoolForm')) {
+			console.log('This is a radioBool')
+			var rForm = form.children
+			var answers = []
+			for(var i = 0; i < rForm.length; i++){
+				console.log(i, rForm[i].children[0].checked, rForm[i].textContent.trim())
+				
+				// if checked:
+				if (rForm[i].children[0].checked) {
+					// we take into consideration that input is the first.
+					answers.push(rForm[i].textContent.trim()); // see firstChild!!
+					allAreAnswered = true;
+				}
+			}
+			if (!allAreAnswered) {
+				notFilled.push(form.id)
+			}
+			// add answer to Json
+			const ident = "question_" + formId // id for json
+			jsonObj.answers[ident] = answers
+
+		}
+
+		// movieForms
+		if (form.classList.contains('movieForm')) {
+			console.log('This is a movieform')
+			var movieForm = form.children
+			var answers = []
+			for(var i = 0; i < movieForm.length; i++){
+				// if checked:
+				if (movieForm[i].firstChild.checked) {
+					// we take into consideration that input is the first.
+					answers.push(movieForm[i].firstChild.value); // see firstChild!!
+					allAreAnswered = true;
+					
+					movieRatings.push(
+					{
+						userId : uId,
+						movieId: movieForm[i].firstChild.value,
+						rank : "5" // can be set dynamicly later! 
+					})
+					console.log(movieRatings, 'movieRatings')
+					}
+				}
+
+			if (form.classList.contains('movieFormShow')) {
+				allAreAnswered = true
+					}
+
+					// When we have a movieform, we can also presume theres a search form beneath
+					// we locate it and get the values.
+					
+					var searchPicks = document.getElementsByClassName('selectedMovie')
+					console.log(searchPicks)
+					// get all buttons
+					var arr = Array.from(searchPicks);
+					console.log(arr)
+					arr.forEach(button => {
+						answers.push(button.id)
+						movieRatings.push({
+							userId : uId,
+							movieId: button.id,
+							rank : "5" // can be set dynamicly later! 
+							})
+						})
+				// add answer to Json
+				const ident = "question_" + formId // id for json
+				jsonObj.answers[ident] = answers
+				
+			}
+	}
+
+	// Post function not in use as we use makeCallRed() with a redirect
+	function makeCall(answers) {
+		fetch("http://0.0.0.0/api/submissions/", {
+			// Adding method type
+			mode: 'cors',
+			method: "POST",
+			// Adding body or contents to send
+
+			body: jsonString = JSON.stringify(answers),
+			// Adding headers to the request
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+			}
+		})
+		
+		// Converting to JSON
+		.then(response => response.json())
+		
+		// Displaying results to console
+		.then(json => console.log(json))
+		.catch(error => {
+                    throw(error);
+		});
+	
+	}
+
+	async function makeCallRatings(ratings, url) {
+		await fetch("http://0.0.0.0/api/submissions/rating/", {
+			// Adding method type
+			mode: 'cors',
+			method: "POST",
+			// Adding body or contents to send
+
+			body: jsonstring = JSON.stringify(ratings),
+			// Adding headers to the request
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+			}
+		})
+		
+		// Converting to JSON
+		.then(response => response.json())
+		
+		// Displaying results to console
+		.then(json => console.log(json))
+		.catch(error => {
+					console.log(ratings, 'ratings')
+                    throw(error);
+		});
+	}
+
+	// Makes call and redirects to next page
+	function makeCallRed(answers, url) {
+		fetch("http://0.0.0.0/api/submissions/", {
+			// Adding method type
+			mode: 'cors',
+			method: "POST",
+			// Adding body or contents to send
+
+			body: jsonString = JSON.stringify(answers),
+			// Adding headers to the request
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+			}
+		})
+		
+		// Converting to JSON
+		.then(response => {
+			window.location.href = url
+		})
+		.catch(error => {
+			throw(error);
+		});
+	
+	}
+
+	// Cookie functions:
+	function setCookie(name,value,days) {
+		var expires = "";
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime() + 30*60000);
+			expires = "; expires=" + date.toUTCString();
+		}
+		document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+	}
+	function getCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0;i < ca.length;i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+	}
+	function eraseCookie(name) {   
+		document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	}
+
+	function makeid(length) {
+		var result           = '';
+		//var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		var characters = '123456789';
+		var charactersLength = characters.length;
+		for ( var i = 0; i < length; i++ ) {
+			result += characters.charAt(Math.floor(Math.random() * 
+			charactersLength));
+		}
+   		return result;
+	}
+</script>
+
+<style>
+
+    .form-submit-button {
+    width: 100px;
+    height: 50px;
+    background: #9088d1;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+    font-size: x-large;
+
+    }
+
+    .form-submit-button:hover {
+    background: #575091;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+    }
+
+</style>

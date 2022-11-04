@@ -1,0 +1,65 @@
+---
+import QForm from '../../layouts/Question-form.astro';
+import Submit from '../../components/Submit.astro';
+
+import Likard from '../../components/Likard.astro';
+---
+<QForm title='Posttask'>
+    <Likard
+    questionId="1"
+    body="The items recommended to me match my interests">
+    </Likard>
+
+    <Likard
+    questionId="2"
+    body="The recommender helped me find the ideal item.">
+    </Likard>
+
+    <Likard
+    questionId="3"
+    body="I think I would enjoy watching the chosen movie.">
+    </Likard>
+
+    <Likard
+    questionId="4"
+    body="I could pick more than one movie from the recommended list.">
+    </Likard>
+
+
+    <Likard
+    questionId="5"
+    body="I did not find any of the recommended movies interesting to me.">
+    </Likard>
+    
+    <Likard
+    questionId="6"
+    body="Overall, I am satisfied with the recommender.">
+    </Likard>
+
+    <Likard
+    questionId="7"
+    body="The recommender can be trusted.">
+    </Likard>
+
+    <Likard
+    questionId="8"
+    body="I would use this recommender again. ">
+    </Likard>
+    
+    <Likard
+    questionId="9"
+    body="The recommendations contained highly popular movies.">
+    </Likard>
+
+    <Likard
+    questionId="10"
+    body="Some of the recommended items are familiar to me.">
+    </Likard>
+
+    <Likard
+    questionId="11"
+    body="he items recommended to me are diverse">
+    </Likard>
+
+    <Submit redirect="/" final={true}></Submit>
+</QForm>

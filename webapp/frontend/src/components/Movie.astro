@@ -1,0 +1,283 @@
+---
+export interface Props {
+    title: string,
+    body?: string,
+    url?: string,
+	questionId: string,
+    usierId?: string,
+	maxtime?: Int16Array,
+    reccommendation?: string,
+}
+
+
+const {url = 'http://0.0.0.0/api/movies/random/1/', title, body, questionId, maxtime=20000} = Astro.props;
+const settings = '../../config.json'
+
+---
+<li class="likard">
+	<div class="likard-cont-mov" id={'div_' + questionId}>
+		<h3>
+			{body}
+		</h3>
+	<div id="loading"></div>
+    <form id={questionId} class="movieForm">
+
+	</form>
+	</div>
+</li>
+
+<script is:inline define:vars={{maxtime, url}} defer>
+    // Function that grabs dynamicly delivered movies based on userId
+    // This will need to be inserted into the main form page, and not on each 
+    // component, as we only want to run it once!
+	const loader = document.querySelector('#loading')
+    function loadContent() {
+        const collections = document.getElementsByClassName("likard-cont-mov")
+		
+        var arr = Array.prototype.slice.call( collections )
+        arr.forEach(item => {
+            getImages(item.id, call=url)
+        })
+        
+    }
+	
+	
+	async function getImages(questionId) {
+		const loader = document.querySelector('#loading')
+        try {
+		displayLoading()
+		// response call will represent the user spesific api call: 
+		// ../movies/random/<uId>/
+		// ../movies/pop_recommendation/<uId>/
+		// ../movies/recommendation_other/<uId>/
+		
+
+		const response = await fetch(call, {
+
+		});
+		
+		if (!response.ok) {
+		throw new Error(`Error! status ${response.status}`);
+		}
+		
+		const results = await response.json()
+		hideLoading()
+
+		// Get qId value from questionId, (div_1, div_2...)
+		const formId = questionId.charAt(questionId.length - 1);
+        // Get form element
+        const element = document.getElementById(formId);	
+		
+		// async function to get images from tmdb	
+		const getImageFromSource = async(tmdbId) => {
+				const f = await fetch(`http://0.0.0.0/api/movies/image/${tmdbId}`)
+				const j = await f.json()
+				return `https://image.tmdb.org/t/p/w200/${j.poster_path}`;
+		}
+    	
+        // Checks if we already created these items !! IM FAILING
+
+        if (element.children.length < 5) {
+            results.forEach(async(result, i) => { // BREAKING POINT! 
+				if (element.children.length < 5) {
+
+					// This entire section of element creation could be achieved with
+					// a simple .innerHTML call, but for now we do it like this.
+				
+
+					// Get src image link from django backend
+					// this is needed because the image link is not attatched to the model.
+					
+					const src = await getImageFromSource(result.links[0].tmdbId)
+
+					// create label element
+					var newNode = document.createElement('label');
+					newNode.for=i
+
+					// apply style to label element:
+					newNode.style.display='flex';
+					newNode.style.flexDirection='column';
+					newNode.style.paddingLeft='0px';
+					newNode.style.width='20%';
+					newNode.className='clickableButton';
+					
+					// create input element
+					var inputElement = document.createElement('input')
+
+					// apply type and style to input element
+					inputElement.type='checkbox'
+					inputElement.name=i
+					inputElement.style.position='absolute'
+					inputElement.style.opacity='0'
+					inputElement.style.width='0'
+					inputElement.style.height='0'
+					inputElement.value=result.movieId // id from django api call
+					
+					// create image element
+					var imageElement = document.createElement('img')
+
+					// apply style to image element
+					imageElement.style.width='100%'
+					imageElement.style.objectFit='contain'
+					imageElement.style.cursor='pointer'
+					imageElement.src=src 
+					
+					// create p element
+					var pElement = document.createElement('p')
+					pElement.textContent=result.title
+
+					
+					// apply nodes to newNode
+
+					// This is a wierd solution to our issue, and should be adressed down the line
+					// We still fetch all the resources but only show 5. 
+					if (element.children.length < 5) {
+					newNode.append(inputElement, imageElement, pElement)
+					element.appendChild(newNode);
+					}
+				
+				}
+				
+        	});
+        }
+        
+        }   catch (err) {
+            console.log(err)
+            }
+        
+    }
+
+	function displayLoading() {
+        loader.classList.add("display")
+        // loading timeout, set in astro props
+        setTimeout(() => {
+            loader.classList.remove("display");
+
+        }, maxtime)
+    }  
+    // function to hide our loading tag
+    function hideLoading() {
+        loader.classList.remove("display")
+    }
+
+	function getCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0;i < ca.length;i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+    }
+
+
+    loadContent()
+</script>
+
+
+<style>
+
+    :root {
+		--link-gradient2: linear-gradient(45deg, #4F39FA, #DA62C4 5%, var(--color-border) 10%);
+		--link-gradient: linear-gradient(45deg, #F1F1F1, #221f20 5%, var(--color-border) 10%);
+	}
+
+	* { min-width: 0; min-height: 0; list-style: none;}
+
+	.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+		background-image: var(--link-gradient);
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	.likard-cont-mov {
+		width: 96%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		opacity: 0.8;
+		background-color: white;
+		list-style: none;
+	}
+
+	.likard > .likard-cont-mov > .forms {
+		display: flex;
+		justify-content: center;
+		padding-top: 1rem;
+		padding-right: 1rem;
+		}
+	
+
+	.likard > .likard-cont-mov > form{
+		display: flex;
+		flex-direction: row;
+		list-style: none;
+		padding-left: 0px;
+	}
+	.likard > .likard-cont-mov > form > label{
+		flex-direction: column;
+		width: 20%;
+		list-style: none;
+	}
+
+    .poster {
+        width: 100%;
+        object-fit: contain;
+    }
+
+	.likard > .likard-cont-mov > div > form > span {
+		padding-left: 4rem;
+		display: inline-block;
+	}
+	
+	.likard > .likard-cont-mov > div > form > span > input {		
+		border: 0px;
+    	height: 1rem;
+		width: 100%;
+	}
+
+	.likard > .likard-cont-mov > form > span > label{
+		padding-left: 1rem;
+	}
+
+	
+	.likard > .likard-cont-mov > a{		
+		text-decoration: none;
+		line-height: 1.4;
+		color: var(--text-color);		
+	}
+
+	h2 {
+		margin: 0;
+		display: inline-block;
+		list-style: none;
+	}
+    
+    p {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+	.likard:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	.likard:is(:hover, :focus-within) h2 {
+		color: #221f20;
+		transform: translateX(2px);
+	}
+	
+</style>
+
+<!-- We have to make this global to avoid Astro hydrating it alongside the rest. -->
+<style is:global>
+	.clickableButton > [type=checkbox]:checked + img {
+	border: 2px solid #F1F1F1;
+}
+</style>

@@ -1,0 +1,106 @@
+---
+export interface Props {
+    title?: string,
+    body: string,
+    href?: string,
+	questionId: string,
+}
+const {href, title, body, questionId} = Astro.props;
+
+---
+
+
+<li class="likard">
+	<div class="likard-cont">
+		<a href={href}>
+			<h2>
+				{questionId}.{title}
+			</h2>
+			<p>
+				{body}
+				<slot/>
+			</p>
+		</a>
+		<div class="forms">
+		<form id={questionId}>
+			<label for='1'>
+				<input type='text' name={questionId} id='textBox'/>
+			</label>
+		</form>
+		</div>
+	</div>
+</li>
+
+
+<style>
+
+	:root {
+		--link-gradient2: linear-gradient(45deg, #4F39FA, #DA62C4 5%, var(--color-border) 10%);
+		--link-gradient: linear-gradient(45deg, #F1F1F1, #221f20 5%, var(--color-border) 10%);
+	}
+
+	.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+		background-image: var(--link-gradient);
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	.likard-cont {
+		width: 93%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		opacity: 0.8;
+		background-color: white;
+	}
+
+	.likard > .likard-cont > .forms {
+		display: flex;
+		justify-content: center;
+		padding-top: 1rem;
+		padding-right: 1rem;
+		}
+
+	.likard > .likard-cont > div > form > span {
+		padding-left: 4rem;
+		display: inline-block;
+	}
+	
+
+	.likard > .likard-cont > form > span > label{
+		padding-left: 1rem;
+	}
+
+	
+	.likard > .likard-cont > a{		
+		text-decoration: none;
+		line-height: 1.4;
+		color: var(--text-color);		
+	}
+
+	h2 {
+		margin: 0;
+		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		display: inline-block;
+		
+	}
+    
+    p {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+	.likard:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	.likard:is(:hover, :focus-within) h2 {
+		color: #221f20;
+		transform: translateX(2px);
+	}
+</style>

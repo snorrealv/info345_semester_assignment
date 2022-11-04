@@ -1,0 +1,12 @@
+---
+import QForm from '../../layouts/Question-form.astro';
+import Movie from '../../components/Movie.astro';
+import Submit from '../../components/Submit.astro';
+import MovieSearch from '../../components/MovieSearch.astro';
+import BoolMultiple from '../../components/BoolMultiple.astro';
+---
+<QForm title='Preference'>
+    <Movie client:load title='Tell us a bit about your preferences' body='Choose 6(10) movies that you like a lot:' questionId="1"></Movie>
+    <MovieSearch client:load title='Or search for any movies'></MovieSearch>
+    <Submit client:load redirect="Demographics" train={true}></Submit>
+</QForm>

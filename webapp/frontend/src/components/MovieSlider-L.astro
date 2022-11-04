@@ -1,0 +1,437 @@
+---
+export interface Props {
+        url?: string,
+        n? : string,
+        uId? : string,
+        title? :string,
+    }
+const {url = null, n='4', uId, title} = Astro.props;
+import secrets from '../../secrets.json'
+
+const response = await fetch(url);
+const data = await response.json();
+
+// contains moiveID with corresponding poster and backdrop paths
+const images = {}
+const movies = data.movies
+
+await Promise.all(movies.map(async (movie) => {
+    const tmresponse = await fetch(`https://api.themoviedb.org/3/movie/${movie.links[0].tmdbId}?api_key=${secrets.TMDB_APIKEY}`)
+    const tmdata = await tmresponse.json();
+    images[movie.movieId] = {
+                            poster:`https://image.tmdb.org/t/p/w200${tmdata.poster_path}`, 
+                            backdrop:`https://image.tmdb.org/t/p/w500${tmdata.backdrop_path}`,
+                            info: tmdata.overview,
+                            }
+}));
+
+//poster : https://image.tmdb.org/t/p/w200${src}
+//backdrop : https://image.tmdb.org/t/p/w500${src}
+
+//calculate n:
+const nmovies = `${~~(100/parseInt(n))}%`
+const nindex = 0
+const focusColor = 0.25
+---
+<li class="likard">
+<div class="likard-cont">
+    <h2>
+        {title}
+    </h2>
+    <slot/>
+    <div class="moviemain">
+    <div class="movie-container" id = {`slider-${uId}`}>
+        <button class="handle left-handle">
+            <div class="text">
+                &#8249;
+            </div>
+        </button>
+        <div class="slider">
+            {movies.map(movie => (
+                <div class="holder">
+                    <button class="movie-button">
+                        <img class='imgq' src={images[movie.movieId].poster} alt=""/>
+                    </button>
+                    <button class='movie-info-button'>
+                        <div class='i hidden'>
+                            &#9432;
+                        </div>
+                    </button>
+                </div>
+                <div class="movie-info hidden">
+                    <img src={images[movie.movieId].backdrop} alt=""/>
+                </div>
+                <div class="movie-info-text hidden">
+                        <span>
+                            <h4>{movie.title}</h4>
+                            <button class="movie-button-close">
+                                <div class='cross'>
+                                    &#x2715;
+                                </div>
+                            </button>   
+                        </span>
+                        <p>{images[movie.movieId].info}</p>
+                        
+                </div>
+            ))}
+        </div>
+        <button class="handle right-handle">
+            <div class="text">
+                &#8250;
+            </div>
+        </button>
+        </div>      
+    </div>
+    </div>
+    </li>
+
+
+<style define:vars={{nmovies, nindex, focusColor}}>
+
+    .moviemain {
+        display: flex;
+        justify-content: center;
+    }
+    .movie-button {
+        all: unset;
+        height: 100%;
+        width: 100%;
+    }
+    .movie-info-button {
+        all: unset;
+        cursor: pointer;
+        position: absolute;
+        z-index: 12;
+        padding-right: .2rem;
+        padding-top: .1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .movie-info-button > .i{
+        z-index: 1;
+        font-size: 1.5rem;
+        color: white;
+        transition: transform 150ms ease-in-out;
+        opacity: 0;
+        transition: opacity 0.5s linear;
+    }
+    .movie-info-button > .i:hover{
+        transform: scale(1.2);
+    }
+
+    .movie-button-close {
+        all: unset;
+        cursor: pointer;
+        width: 30px;
+    }
+    .movie-button-close > .cross{
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: transform 150ms ease-in-out;
+        padding-right: 2rem;
+    }
+    .movie-button-close > .cross:hover{
+        transform: scale(1.2);
+    }
+    .movie-info {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        align-self: auto;
+        margin-left: -2rem;
+        transform: translateX(calc(var(--nindex) * 100%));
+        transition: transform 250ms ease-in-out;
+    }
+    .movie-info-text {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        color: whitesmoke;
+        transform: translateX(calc(var(--nindex) * 100%));
+        transition: transform 250ms ease-in-out;
+        background-color: rgb(0, 0, 0, .5);
+        overflow-y: scroll;
+    }
+    .movie-info-text > span{ 
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .movie-info-text > span > h4 {
+        margin: 0;
+        padding-bottom: 0px;
+    }
+
+    .movie-info-text > p {
+        margin-top: 0px;
+        padding-right: 40%;
+
+    }
+
+    .movie-info > img {
+        width: 115%;
+        box-shadow: inset 0px 0px 150px black;
+    }
+    .movie-info > p {
+        position: absolute;
+        z-index: 11;
+        color: black;
+    }
+    .movie-info > img:after {
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        box-shadow: inset 0px 0px 150px black;
+    }
+    .movie-container {
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        max-width: 98%;
+        border-radius: .5rem;
+    }
+    .slider {
+        --slider-index: 0;
+        display: flex;
+        max-width: 90%; 
+        flex-grow: 1;
+        transform: translateX(calc(var(--slider-index) * -100%));
+        transition: transform 250ms ease-in-out;
+    }
+
+    .holder > .movie-button > img {
+        width: 100%;
+        height: 100%;
+        }
+
+    .holder {
+        display: grid;
+        max-width: var(--nmovies);
+        flex: 0 0 var(--nmovies);
+        width: var(--nmovies);
+        justify-items: right;
+    }
+    .holder > img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .handle {
+        border: none;
+        width: 2rem;
+        background-color: rgb(0, 0, 0, var(--focusColor));
+        z-index: 1;
+        border-radius: .5rem;
+    }
+    .handle:hover{
+        background-color: rgb(0, 0, 0, .5);
+    }
+
+    .left-handle{
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .right-handle{
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .movie-container:hover .left-handle::after{
+        content: \203A;
+    }
+    .movie-container:hover .right-handle::after{
+        content: \2039;
+    }
+
+    .text {
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: transform 150ms ease-in-out;
+    }
+    .handle:hover .text {
+        transform: scale(1.2);
+    }
+    .hidden {
+        display: none;
+    }
+    .show {
+        display: contents;
+    }
+
+
+	.likard {
+		margin-bottom: 1rem;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		padding: 0.15rem;
+        background-color: #EEF1FF;
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        border: solid 3px #D2DAFF;
+	}
+	.likard-cont {
+		width: 93%;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		opacity: 1;
+		background-color: #f1f1f1;
+	}
+
+	.likard > .likard-cont > .forms {
+		display: flex;
+		justify-content: center;
+		padding-top: 1rem;
+		padding-right: 1rem;
+		}
+
+	.likard > .likard-cont > div > form > span {
+		padding-left: 4rem;
+		display: inline-block;
+	}
+	
+
+	.likard > .likard-cont > form > span > label{
+		padding-left: 1rem;
+	}
+
+	
+	.likard > .likard-cont > a{		
+		text-decoration: none;
+		line-height: 1.4;
+		color: var(--text-color);		
+	}
+
+	h2 {
+		margin: 0;
+		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		display: inline-block;
+		
+	}
+    
+    p {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+	.likard:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	.likard:is(:hover, :focus-within) h2 {
+		color: #221f20;
+		transform: translateX(2px);
+	}
+</style>
+
+<script is:inline defer define:vars={{uId}}>
+    // to deal with handlers
+    const cont = document.getElementById(`slider-${uId}`)
+    cont.addEventListener('click', e => {
+        let handle
+        let info
+        // add info and handle logic
+        if (e.target.matches('.i')) {
+            info = e.target.closest('.movie-info-button').closest('.holder')
+            onInfoClick(cont, info)
+            info.classList.add('hidden')
+        }
+        if (e.target.matches('.cross')) {
+            info = e.target.closest('.movie-button-close')
+            onInfoCloseClick(cont, info)
+        }
+        if (e.target.matches('.handle')) {
+            handle = e.target
+        }
+        else {
+            handle = e.target.closest('.handle')
+        }
+
+        if (handle != null) onHandleClick(cont, handle, uId)
+    })
+
+    cont.addEventListener('mouseover', e => {
+
+        if (e.target.matches('.moviemain')) {
+            console.log(e.target)
+            let info = e.target.closest('.holder').querySelector('.i')
+            info.classList.remove('hidden')
+            info.style.setProperty('opacity', 1)
+            //setTimeout(, 10000)
+            //console.log(info)
+        }
+        if (e.target.matches('.imgq')) {
+            console.log(e.target)
+            let info = e.target.closest('.holder').querySelector('.i')
+            info.classList.remove('hidden')
+            info.style.setProperty('opacity', 1)
+            //setTimeout(, 10000)
+            //console.log(info)
+        }
+    });
+
+    cont.addEventListener('mouseout', e => {
+        if (e.target.matches('.imgq')) {
+            console.log(e.target)
+            let info = e.target.closest('.holder').querySelector('.i')
+            
+            setTimeout(() => {
+                info.style.setProperty('opacity', 0)
+            }, "500")
+            setTimeout(() => {
+                info.classList.add('hidden')
+            }, "1000")
+        }
+    });
+
+
+    function onHandleClick(cont, handle, uId) {
+        // for sliderindex
+        const slider = handle.closest('.movie-container').querySelector('.slider')
+        const sliderIndex = parseInt(getComputedStyle(slider).getPropertyValue('--slider-index'))
+        // for big image index
+        // cont == the entire slider div
+        const contIndex = parseInt(getComputedStyle(cont).getPropertyValue('--nindex'))
+
+        if (handle.classList.contains('left-handle') && sliderIndex != 0) {
+            slider.style.setProperty('--slider-index', sliderIndex - 1)
+            cont.style.setProperty('--nindex', sliderIndex - 1)
+        }
+
+        // need to implement max
+        if (handle.classList.contains('right-handle')) {
+            slider.style.setProperty('--slider-index', sliderIndex + 1)
+            cont.style.setProperty('--nindex', sliderIndex + 1)
+        }
+    }
+    // to deal with movie cliks
+    function onInfoClick(cont, button, uId) {
+        const movieInfoImg = button.nextSibling
+        const movieInfoText = button.nextSibling.nextSibling 
+        cont.style.setProperty('--focusColor', 0.5)
+        movieInfoText.classList.remove('hidden')
+        movieInfoImg.classList.remove('hidden')
+
+
+        
+    }
+
+    function onInfoCloseClick(cont, button, uId) {
+        const closestHolder = button.parentElement.parentElement
+        const movieInfoImg = closestHolder.previousSibling
+        const movieInfoText = closestHolder
+        movieInfoText.classList.add('hidden')
+        movieInfoImg.classList.add('hidden')
+        cont.style.setProperty('--focusColor', 0.25)
+    }
+</script>

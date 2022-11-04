@@ -1,0 +1,24 @@
+---
+import QForm from '../../layouts/Question-form.astro';
+import Movie from '../../components/Movie.astro';
+import Submit from '../../components/Submit.astro';
+import MovieSearch from '../../components/MovieSearch.astro';
+import BoolMultiple from '../../components/BoolMultiple.astro';
+---
+<QForm title='Preference'>
+    <h2 class="instructions">Please tell us a bit about your preferences:</h2>
+    <Movie client:load title='' body='Please pick at least 10 movies that you have previously watched and liked. You can select the movies from the list presented below or use the search bar to find your favourites that might not be represented in the list.' questionId="1"></Movie>
+    <MovieSearch client:load title='Use the search bar to find your favourites as well:'></MovieSearch>
+    <Submit client:load redirect="Demographics" train={true}></Submit>
+</QForm>
+
+<style>
+    .instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		background: #575091;
+		padding: 1.0rem;
+		border-radius: 0.4rem;
+		color: var(--color-bg);
+	}
+</style>

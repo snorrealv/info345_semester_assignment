@@ -1,0 +1,44 @@
+---
+export interface Props {
+    title: string
+    headerColor?: string
+}
+const {title, headerColor='#231f20'} = Astro.props;
+---
+<header>
+     <div class="container">
+        <div class='one'>
+            <img src="/assets/MF_LOGOSimpleVersion_white.png" alt="">
+        </div>
+        
+        <h1>
+            {title}
+        </h1>
+     </div>
+</header>
+
+<style define:vars={{headerColor}}>
+    h1 {
+        color: #f1f1f1;
+        text-align: center;
+        font-size: var(--font-size-lg);
+        padding: 0;
+        margin: auto 1rem auto 1rem;
+    }
+
+    .container {
+        height: 4rem;
+        display: flex;
+        background-color:var(--headerColor);
+        align-items: baseline;
+        max-width: 100%;
+    }
+
+    .one {
+        padding: 0.5em 1em 0.5em 1em;
+    }
+    .container > .one >img {
+        height: 3rem;
+    }
+
+</style>

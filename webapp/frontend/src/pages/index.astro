@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/astro-backup-comp/Card.astro';
+---
+<Layout title="Welcome to Astro.">
+	<main>
+		<h2><center>Personalized Movie Recommender System</center></h2>
+		<p class="instructions">
+			WELCOME STATEMENT<br/><br/>
+
+			<b>Procedure:</b> WRITE PROCEDURE.<br/><br/>
+
+            <b>Duration and compensation:</b> The study takes around -- minutes to complete. By clicking Start you confirm that you've read and understood
+            this consent form.<br/><br/>
+            <hr>
+            <small><center>With any further questions please contact the person responsible for running the study: snorre.alvsvag@uib.no</center></small>
+
+		</p>
+
+		<ul role="list" class="link-card-grid">
+		    <Card href="/q/Preference" title="Start" body="I give my consent and want to begin the study." />
+
+			<Card href="/q/Preference" title="Preference" body="This is where we set the user Preferences through a selection of movies" />
+			<Card href="/q/Demographics" title="Demographics" body="Here is the demographics Page" />
+			<Card href="/q/Generation" title="Recommendation generation" body="This is where we show users the recommended movies" /> 
+			<Card href="/q/Posttask" title="Post-Task" body="This is the post task questionnaire" />
+			<Card href="/q/Personality" title="Personality" body="Personality questionnaire" />
+		</ul>
+	</main>
+</Layout>
+
+<style>
+	:root {
+		--astro-gradient: linear-gradient(0deg,#4F39FA, #DA62C4);
+	}
+
+	h1 {
+		margin: 2rem 0;
+	}
+	h2 {
+		margin: 2rem 0;
+	}
+	main {
+		margin: auto;
+    	padding: 1em;
+		max-width: 90ch;
+	}
+
+	.text-gradient {
+		font-weight: 900;
+		background-image: var(--astro-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 100% 200%;
+		background-position-y: 100%;
+		border-radius: 0.4rem;
+		animation: pulse 4s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% { background-position-y: 0%; }
+		50% { background-position-y: 80%; }
+	}
+
+	.instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		background: #575091;
+		padding: 1.0rem;
+		border-radius: 0.4rem;
+		color: var(--color-bg);
+	}
+
+	.instructions code {
+		font-size: 0.875em;
+		border: 0.1em solid var(--color-border);
+		border-radius: 4px;
+		padding: 0.15em 0.25em;
+	}
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
+</style>
