@@ -21,11 +21,11 @@ class bcolors:
 mypath = 'data/images'
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 onlyfiles = [f.replace('.jpg', '') for f in onlyfiles]
-print(onlyfiles)
+#print(onlyfiles)
 
-df = pd.read_csv('data/all_recipes/item-profiles2.csv',  on_bad_lines='skip', sep = ';')
+df = pd.read_csv('item-profiles2.csv',  on_bad_lines='skip', sep = ';')
 def scrape(id, name):
-
+    #print('INITUALIZED')
     def getsoup(url):
         req = requests.get(url)
         html = None
@@ -39,8 +39,9 @@ def scrape(id, name):
     def storeimage(id, url):
         file_name = f'data/images/{id}.jpg' #prompt user for file_name
         sleeptime = random.uniform(0.2,0.5)
-        print(id, url)
+       # print(id, url)
         try:
+            print('STARTED')
             urllib.request.urlretrieve(url, file_name)
             print(f'{bcolors.HEADER}\nCrawled for {id} next in {sleeptime:.3f} seconds.{bcolors.ENDC}')
         except Exception as e:
@@ -59,35 +60,49 @@ def scrape(id, name):
     soup = getsoup(url)
     if soup:
         first_item = soup.find(id=first_item_id)
-        try:
+        if not first_item:
+            print(f'{bcolors.FAIL}\nCould not find First Image for url: {url}{bcolors.ENDC}')
+        else:
             article_link = first_item['href']
-        except Exception as e:
-            print(f'{bcolors.FAIL}\nFailed for item {first_item}{bcolors.ENDC}', e)
-            return 0
-        try:
             soup = getsoup(article_link)
             if soup:
                 image = soup.select('.primary-image__image')
                 if not image:
                     image = soup.select('#mntl-sc-block-image_1-0-1')
-                if image:
+                    try:
+                        storeimage(id, image[0]['data-src'])
+                    except IndexError as e:
+                        print(e, f'for {article_link}')
+
+                elif image:
                     for elem in image:
                         if 'loaded' in elem['class']:
                             storeimage(id, elem['src'])
-                        return 1
+                            return 1
+                        else:
+                            print(f'id {id}, had no loaded tag, check out: {article_link}')
                 else:
                     print('image not found for image ID: ')
+            else:
+                print('No soup Found')
             css_selector = '.primary-image__image'
             xpath = '//*[@id="mntl-sc-block-image_1-0-1"]'
-        except Exception as e:
-            print(f'{bcolors.FAIL}\nSomething went wrong :({bcolors.ENDC}', e)
+            # except Exception as e:
+            #     print(f'{bcolors.FAIL}\nFailed for item {first_item}{bcolors.ENDC}', e)
+            #     return 0
+    else:
+        print('Could not get soup...')
 
 def rowapply():
     return
+def run():
+    for row in df.itertuples():
+        if str(row._1) not in onlyfiles:
+            scrape(row._1, row.Name)
+            print(f'{bcolors.OKGREEN}\nScraping{bcolors.ENDC}', row._1, row.Name)
 
-for row in df.itertuples():
-    if str(row._1) not in onlyfiles:
-        print(f'{bcolors.OKGREEN}\nScraping{bcolors.ENDC}', row._1, row.Name)
-        scrape(row._1, row.Name)
-    else:
-        print(row._1, row.Name, ' Already scraped.')
+        else:
+            print(row._1, row.Name, ' Already scraped.')
+
+print(len(onlyfiles))
+print(len(df))
