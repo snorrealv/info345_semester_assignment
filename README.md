@@ -2,7 +2,7 @@
   * [ ] Sette opp
   * [ ] Tilpasse brukerstudie
   * [ ] Implementere nye algorytmer
-* [ ] Bygge Basic Rec - Carl/Vanessa
+* [X] Bygge Basic Rec - Carl/Vanessa
 * [ ] Extact Features - Snorre
   * [ ] Enrich Dataset
 * [ ] Bygge Hybrid - Snorre/Carl/Venessa
