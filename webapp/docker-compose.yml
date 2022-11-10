@@ -9,7 +9,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/web:/web
-      - ./backend/data:/data
+      - ../data:/data
       - ./backend/static:/static
 
     environment:

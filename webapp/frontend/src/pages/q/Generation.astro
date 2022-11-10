@@ -3,73 +3,58 @@ import QForm from '../../layouts/Question-form.astro';
 import Movie from '../../components/Movie.astro';
 import Submit from '../../components/Submit.astro';
 import BoolMultiple from '../../components/BoolMultiple.astro';
+import RecipesGeneration from '../../components/RecipesGeneration.astro';
+import Likard from '../../components/Likard.astro';
 
 import Loading from '../../components/Loading.astro';
 ---
 <QForm title='Generation'>
-    <Loading title='Here are your personalized recommendations.' questionId="1" url='http://0.0.0.0/api/recommendation/'></Loading>
+    <RecipesGeneration title='' body='These are your recommendations! Please have a look and move on.'></RecipesGeneration>
+    <Likard
+    questionId="1"
+    body="The items recommended to me match my interests">
+    </Likard>
 
-    <BoolMultiple
-        title="The movie that I have chosen is..."
-        questionId="2"
-        choices={ ['A movie I know and have watched before','A movie I know about but have never watched', 'A movie I have never heard of but would be interested in'] }>
-    </BoolMultiple>
+    <Likard
+    questionId="2"
+    body="The recommender helped me find the ideal item.">
+    </Likard>
 
-    <BoolMultiple
+    <Likard
     questionId="3"
-    title="The recommender helped me find the ideal item.">
-    </BoolMultiple>
+    body="I think I would enjoy watching the chosen movie.">
+    </Likard>
 
-    <BoolMultiple
+    <Likard
     questionId="4"
-    title="I think I would enjoy watching the chosen movie.">
-    </BoolMultiple>
+    body="I could pick more than one movie from the recommended list.">
+    </Likard>
 
-    <BoolMultiple
+
+    <Likard
     questionId="5"
-    title="I could pick more than one movie from the recommended list.">
-    </BoolMultiple>
-
-
-    <BoolMultiple
+    body="I did not find any of the recommended movies interesting to me.">
+    </Likard>
+    
+    <Likard
     questionId="6"
-    title="I did not find any of the recommended movies interesting to me.">
-    </BoolMultiple>
-    
-    <BoolMultiple
+    body="Overall, I am satisfied with the recommender.">
+    </Likard>
+
+    <Likard
     questionId="7"
-    title="Overall, I am satisfied with the recommender.">
-    </BoolMultiple>
+    body="The recommender can be trusted.">
+    </Likard>
 
-    <BoolMultiple
+    <Likard
     questionId="8"
-    title="The recommender can be trusted.">
-    </BoolMultiple>
-
-    <BoolMultiple
-    questionId="9"
-    title="I would use this recommender again. ">
-    </BoolMultiple>
+    body="I would use this recommender again. ">
+    </Likard>
     
-    <BoolMultiple
-    questionId="10"
-    title="The recommendations contained highly popular movies.">
-    </BoolMultiple>
-
-    <BoolMultiple
-    questionId="11"
-    title="Some of the recommended items are familiar to me.">
-    </BoolMultiple>
-
-    <BoolMultiple
-    questionId="12"
-    title="he items recommended to me are diverse">
-    </BoolMultiple>
-
-    <BoolMultiple
-    questionId="13"
-    title="The items recommended to me match my interests">
-    </BoolMultiple>
+    <Likard
+    questionId="9"
+    body="The recommendations contained highly popular movies.">
+    </Likard>
 
     <Submit redirect="/" final={true}></Submit>
 </QForm>

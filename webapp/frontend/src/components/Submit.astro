@@ -2,20 +2,30 @@
 export interface Props {
 		redirect?: string,
 		train?: boolean,
-		final?: boolean
+		final?: boolean,
+		recipes?: boolean,
     }
-const {id, redirect, train = false, final= false} = Astro.props;
-
-
+const {id, redirect, train = false, final= false, recipes = false} = Astro.props;
 // Down the road i intend to make is so that you can set the URL in attributes,
 
-// The way we parse elements
-const functionCall = `postForms("${redirect}")`
+// @@@@@@@@@@@ NOTE @@@@@@@@@@@@
+// This component is a mix of edgecases, and will be rewritten
+// in due time. The approach is messy at best, but it works for now.
+// It simply parses all forms in the documents and tries to fit
+// the information into predefined categories. Change at your
+// own risk.
 ---
-<button class="form-submit-button" onclick={functionCall}>Next</button>
 
-<script is:inline define:vars={{train, final}}>
+<button class="form-submit-button">Next</button>
 
+<script is:inline define:vars={{train, final, redirect, recipes}}>
+	document.addEventListener("click", function(e) {
+		 if (e.target && e.target.matches('button.form-submit-button')) {
+			console.log("HIT BUTTON")
+			postForms(redirect)
+		 }
+		console.log(e.target)
+	})
 	// Checks if user has uId cookie, if not we create one where the length is 5
 	if (!getCookie('uId')) {
 		setCookie('uId', makeid(5), 1)
@@ -35,63 +45,110 @@ const functionCall = `postForms("${redirect}")`
 
 	// Array to hold ratings to be sent in another query
 	var movieRatings = []
-	
+	var recipeRatings = []
 	// Array to hold formId from forms not filled.
 	var notFilled = []
 	
 	// Used to store recommendations to django backend
 	// Get form answers
-	function postForms (url){
+	function postForms(url){
 		// Check each of the forms in our document
-		console.log(document.forms)
-
-		for(let i = 1; i - 1 < document.forms.length; i++){
-			getAnswers(i)
-		}
-		// Executes only if we have filled all boxes
-		if (document.getElementsByClassName('movieForm').length != 0) {
-			if (movieRatings.length < 10) {
-				alert('Please choose minimum 10 movies!')
-				return 0
-			}
-		}
-
-
-		if (notFilled.length == 0) {
-			if (movieRatings.length > 0) {
-				console.log('Sent ratings')
+		if (recipes) {
+			recipe_forms = document.forms
+			Array.from(recipe_forms).forEach(function (element) {
+        		getRecipeAnswers(element)
+			})
+			
+			if (notFilled.length == 0) {
 				makeCallRatings(movieRatings, url).then(() => makeCallRed(jsonObj, url))
 			}
 			else {
-				makeCallRed(jsonObj, url)
-			} 
+				notFilled.forEach((element) => {
+					console.log('None',element)
+					const elem = document.getElementById(element.id).closest('.recipe_holder')
+					console.log(elem)
+					elem.style.borderWidth = '3px'
+					elem.style.borderColor = '#313131'
+					//document.getElementById(element.id).closest('.recipe_holder').style.borer = '3px'
+				});
+
+				const elem = document.getElementById(notFilled[0].id)
+				const elemDiv = elem.closest('.recipe_holder')
+				console.log(elemDiv)
+				
+				elemDiv.scrollIntoView({behavior: "smooth", block: "start"});
+
+				notFilled = []
+      		}
+
+		} else {
+			for(let i = 1; i - 1 < document.forms.length; i++){
+				getAnswers(i)
+			}
+			// Executes only if we have filled all boxes
+			if (document.getElementsByClassName('movieForm').length != 0) {
+				if (movieRatings.length < 10) {
+					alert('Please choose minimum 10 movies!')
+					return 0
+				}
+			}
+
+
+			if (notFilled.length == 0) {
+				if (movieRatings.length > 0) {
+					console.log('Sent ratings')
+					makeCallRatings(movieRatings, url).then(() => makeCallRed(jsonObj, url))
+				}
+				else {
+					makeCallRed(jsonObj, url)
+				} 
+			}
+			else {
+				notFilled.forEach((element) => {
+					document.getElementById(element).closest('li').style.borderStyle = 'solid'
+				});
+
+				const elem = document.getElementById(notFilled[0])
+				const elemDiv = elem.closest('li')
+				console.log(elemDiv)
+				
+				elemDiv.scrollIntoView({behavior: "smooth", block: "start"});
+
+				notFilled = []
+				
+			}
+		}
+	}
+
+	function getRecipeAnswers(formId) {
+		var answers = []
+		const itemID = formId.closest('.recipe_holder').dataset.id
+		console.log(formId.closest('.recipe_holder').dataset.id)
+
+		var arr = Array.from(formId);
+					arr.forEach(button => {
+						if (button.checked) {
+							answers = button.value
+							movieRatings.push({
+								userId : uId,
+								movieId: itemID,
+								rank : button.value // can be set dynamicly later! 
+								})
+							}
+						})
+		if (answers.length == 0) {
+			notFilled.push(formId)
 		}
 		else {
-			// create alert
-			//alert(notFilled)
-			notFilled.forEach((element) => {
-				document.getElementById(element).closest('li').style.borderStyle = 'solid'
-			});
-
-			const elem = document.getElementById(notFilled[0])
-			const elemDiv = elem.closest('li')
-			console.log(elemDiv)
-			
-			elemDiv.scrollIntoView({behavior: "smooth", block: "start"});
-
-			notFilled = []
-			
-		}
-		// If we have movieform & movieform show, we need to check lenght
-
-
-	}
-	
+		// add info to json.
+		jsonObj.answers[itemID] = answers
+		}}
 
 	// Function that finds all answers, and adds then to notFilled list if not filled.
 	function getAnswers(formId) {
-		// Declare vars
+		console.log(formId)
 		var form = document.getElementById(formId);
+		console.log(form)
 		var allAreAnswered = false		
 		var answer;
 

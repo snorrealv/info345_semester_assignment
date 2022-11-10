@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
 
-from ..models import UserRankings, Recommendations, Submission, FinalResult, Movies
+from ..models import UserRankings, Recommendations, Submission, FinalResult, Recipe
 from ..tasks import run_recommendations
 
 import json
@@ -25,25 +25,25 @@ def sub_post_save(sender, instance, created, *args, **kwargs):
             for movie in q:
                 movie.delete()
 
-            data = {"userId": instance.userId, "movies": ratings}
+            data = {"userId": instance.userId, "recipes": ratings}
             # {"userID": userID, "movies": [movieID, movieID, movieID...]}
             # Initualize the recommendation object
             recommendation = Recommendations(userId = instance.userId)
             recommendation.save()
 
             # Save the original choices in recommendation with None
-            orig_recommendation = Recommendations(userId = instance.userId)
-            orig_recommendation.save()
-            orig_recommendation.recommendation_model = 'original'
+            # orig_recommendation = Recommendations(userId = instance.userId)
+            # orig_recommendation.save()
+            # orig_recommendation.recommendation_model = 'original'
 
-            for objec in data.items():
-                for obj in objec[1]:
-                    try:
-                        orig_recommendation.movies.add(Movies.objects.get(movieId = obj))
-                    except ObjectDoesNotExist:
-                        print(f'Movie with movieId: {obj} not found.')
+            # for objec in data.items():
+            #     for obj in objec[1]:
+            #         try:
+            #             orig_recommendation.movies.add(Movies.objects.get(movieId = obj))
+            #         except ObjectDoesNotExist:
+            #             print(f'Movie with movieId: {obj} not found.')
             
-            orig_recommendation.save()
+            # orig_recommendation.save()
 
             # Start recommender task with user ID and data
             run_recommendations.delay(userId = instance.userId, data=data)

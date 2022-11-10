@@ -200,7 +200,6 @@ class Features:
     def get_image_features(self, scale_percent):
         if not self.img_processed:
             self.__load_image()
-
         scale_percent = scale_percent # percent of original size
         width = int(self.img_processed.shape[1] * scale_percent / 100)
         height = int(self.img_processed.shape[0] * scale_percent / 100)

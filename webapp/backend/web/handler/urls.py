@@ -6,6 +6,9 @@ urlpatterns = [
     path('api/submissions/', views.Submissions_list.as_view()),
     path('api/submissions/<int:pk>/', views.Submissions_detail.as_view()),
     # path('api/movies/', views.Movie_list.as_view()),
+    path('api/recipes/', views.Recipe_list.as_view()),
+    path('api/recipes/initial', views.StartingRecipes.as_view()),
+    path('api/images/<int:id>', views.ImageApiView.as_view()),
     # path('api/movies/<int:pk>/', views.Movie_detail.as_view()),
     # path('api/movies/random/', views.movie_random),
     # path('api/movies/random_image/', views.movie_random_image),
@@ -14,6 +17,8 @@ urlpatterns = [
     # path('api/movies/image/<int:pk>', views.movie_get_image),
     path('api/submissions/rating/', views.Rating.as_view()),
     path('api/recommendation/<str:pk>/<str:pk_model>', views.Recommendation.as_view()),
+    
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+

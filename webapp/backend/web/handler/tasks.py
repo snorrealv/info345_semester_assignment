@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from recommender.surprise_recommender import svd_recommender
 from recommender import als_recommender
-from .models import Recommendations, Movies
+from .models import Recommendations, Recipe
 
 @shared_task(bind=True)
 def run_recommendations(self, userId, data, model = None):
@@ -19,16 +19,19 @@ def run_recommendations(self, userId, data, model = None):
     #data = Recommender.recs
     #model = 'ALS'
 
-    # ==================== SVD ==========================
-    Recommender = svd_recommender.SVDRecommender(20)
-    userId = int(userId) # critical for SVD to work
-    Recommender.run_recommender(user_id=userId, user_data=data, rerank=True)
+    # ==================== CF ==========================
+    # Recommender = svd_recommender.SVDRecommender(20)
+    # userId = int(userId) # critical for SVD to work
+    # Recommender.run_recommender(user_id=userId, user_data=data, rerank=True)
 
-    # Access data
-    data = Recommender.recs
+    # # Access data
+    # data = Recommender.recs
     #reranked_data = Recommender.reranked_data
+
+    data = [7188,6651,7038,9098,6126]
+
     reranked_data = None
-    model = 'SVD'
+    model = 'CF'
 
     # ==================== --- ==========================
     print(data)
@@ -46,15 +49,14 @@ def run_recommendations(self, userId, data, model = None):
     # the model twice. This also happends in the view and it always picks [:1]
     recommendation = Recommendations.objects.filter(userId = userId, recommendation_model='NaN')[:1].get()
 
-    for objec in data.items():
-        for obj in objec[1]:
-            recommendation.movies.add(Movies.objects.get(movieId = obj[0]))
+    for objec in data:
+        recommendation.recipes.add(Recipe.objects.get(recipe_id = objec))
     
-    recommendation.recommendation_model = 'SVD'
+    recommendation.recommendation_model = 'CF'
     recommendation.save()
 
 
-    # Reranked data paresd
+    # Reranked data parsed
     if reranked_data:
         recommendation = Recommendations(userId = userId)
         recommendation.save()

@@ -415,3 +415,6 @@ webapp/backend/data/als_US
 webapp/backend/data/ml_1m
 webapp/backend/data/ml-1m
 webapp/backend/data/ml-latest-small
+webapp/backend/web/handler/migrations
+
+lecture_notes

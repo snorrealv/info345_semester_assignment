@@ -3,13 +3,13 @@ import QForm from '../../layouts/Question-form.astro';
 import Movie from '../../components/Movie.astro';
 import Submit from '../../components/Submit.astro';
 import MovieSearch from '../../components/MovieSearch.astro';
+import Recipes from '../../components/Recipes.astro';
 import BoolMultiple from '../../components/BoolMultiple.astro';
 ---
 <QForm title='Preference'>
     <h2 class="instructions">Please tell us a bit about your preferences:</h2>
-    <Movie client:load title='' body='Please pick at least 10 movies that you have previously watched and liked. You can select the movies from the list presented below or use the search bar to find your favourites that might not be represented in the list.' questionId="1"></Movie>
-    <MovieSearch client:load title='Use the search bar to find your favourites as well:'></MovieSearch>
-    <Submit client:load redirect="Demographics" train={true}></Submit>
+    <Recipes title='' body='With the information present and your previous experience, please rate the following recipes, then click next.' questionId="1"></Recipes>
+    <Submit redirect="Generation" train={true} recipes={true}></Submit>
 </QForm>
 
 <style>

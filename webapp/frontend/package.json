@@ -1,6 +1,6 @@
 {
-  "name": "@example/basics",
-  "version": "0.0.1",
+  "name": "@snorre/main",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@astrojs/react": "^0.4.2",
-    "astro": "^1.0.0-beta.36",
+    "astro": "^1.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -1,9 +1,16 @@
 from urllib.request import Request
 from rest_framework import serializers
-from handler.models import Submission, Recommendations, UserRankings
+from handler.models import Submission, Recommendations, UserRankings, Recipe
 
 
 # Creating serializer class
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = '__all__'
+
 
 class SubmissionSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only = True)
@@ -32,7 +39,7 @@ class ImageSerializerField(serializers.Field):
 class RecommendationSerializer(serializers.Serializer):
     userId = serializers.CharField()
     recommendation_model = serializers.CharField()
-    movies = MovieSerializer(many=True)
+    recipes = RecipeSerializer(many=True)
 
 class UserRankingsSerializer(serializers.Serializer):
     userId = serializers.CharField()
@@ -41,7 +48,3 @@ class UserRankingsSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return UserRankings.objects.create(**validated_data)
-
-# For any other classes that needs serializing, the same can be achieved with ModelSerilaizer class, 
-# see https://www.django-rest-framework.org/tutorial/1-serialization/#using-modelserializers
-# I have simply chosen to use the manual method due to our JSONField(). 

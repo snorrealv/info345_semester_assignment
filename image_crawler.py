@@ -25,7 +25,7 @@ onlyfiles = [f.replace('.jpg', '') for f in onlyfiles]
 
 df = pd.read_csv('item-profiles2.csv',  on_bad_lines='skip', sep = ';')
 def scrape(id, name):
-    #print('INITUALIZED')
+    print('INITUALIZED')
     def getsoup(url):
         req = requests.get(url)
         html = None
@@ -66,18 +66,24 @@ def scrape(id, name):
             article_link = first_item['href']
             soup = getsoup(article_link)
             if soup:
+                print('Trying option one!')
                 image = soup.select('.primary-image__image')
                 if not image:
+                    print('Failed, trying option two!')
                     image = soup.select('#mntl-sc-block-image_1-0-1')
                     try:
                         storeimage(id, image[0]['data-src'])
+                        print(f'{bcolors.OKGREEN}\nSaved{bcolors.ENDC}', id)
+                        return 1
                     except IndexError as e:
                         print(e, f'for {article_link}')
 
                 elif image:
+                    print('Processing option one! \n')
                     for elem in image:
                         if 'loaded' in elem['class']:
                             storeimage(id, elem['src'])
+                            print(f'{bcolors.OKGREEN}\nSaved{bcolors.ENDC}', id)
                             return 1
                         else:
                             print(f'id {id}, had no loaded tag, check out: {article_link}')
@@ -104,5 +110,4 @@ def run():
         else:
             print(row._1, row.Name, ' Already scraped.')
 
-print(len(onlyfiles))
-print(len(df))
+run()

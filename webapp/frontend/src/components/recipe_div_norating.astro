@@ -1,0 +1,75 @@
+---
+
+export interface Props {
+    title: string,
+    id: string,
+}
+const {id} = Astro.props;
+---
+<div class="recipe_holder" id={`recipe_holder_${id}`} data-id="1">
+    <div class="recipe_left">
+        <!-- <img src="https://via.placeholder.com/500x400/eee?text=1:1" alt=""> -->
+        <div class="img_cont"><img id='recipe_image'src="https://via.placeholder.com/500x400/eee?text=1:1" alt=""></div>
+    </div>
+    
+    <div class="recipe_information">
+        <h5 id='title'>Title</h5>
+        <p id='content'>Content</p>
+    </div>
+</div>
+
+<style>
+    .recipe_holder {
+        display: flex;
+        flex-direction: row;
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+        border: 1px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.2);
+        border-radius: 1rem;
+        width: 98%;
+        min-height: 200px;
+        max-height: 400px;
+        height: auto;
+
+        margin: 0 0 1rem 0;
+        align-items: center;
+    }
+    .recipe_holder > .recipe_left > .img_cont {
+        height: 200px;
+        width: 240px;
+        border: 1px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.2);
+        border-radius: 1rem;
+        overflow: hidden;
+
+        margin: 0 0 .5rem 0;
+    }
+    .recipe_holder > .recipe_left > .img_cont > img {
+        height: 100%;
+        width: 100%;
+        object-fit: fill;
+    }
+
+    .recipe_left {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin: .5rem 1rem .5rem 1rem;
+    }
+    .recipe_information {
+        min-height: 200px;
+        max-height: 400px;
+        height: auto;
+        overflow: scroll;
+       
+    }
+    .recipe_information > p {
+
+    }
+
+    .recipe_information > h5 {
+        font-size: 23px;
+    }
+</style>

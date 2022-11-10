@@ -4,6 +4,14 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Create your models here.
+class Recipe(models.Model):
+    recipe_id = models.IntegerField()
+    recipe_name = models.CharField(max_length=200, default = 'Title')
+    label = models.CharField(max_length=50)
+    description = models.TextField()
+    image_url = models.CharField(max_length=200)
+
+
 class Submission(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     userId = models.CharField(max_length=100)
@@ -29,7 +37,7 @@ class Recommendations(models.Model):
     #     return {"movies":["a","b","c"]}
     
     # #movies = models.JSONField('Recommendation', default=movies_default)
-    # movies = models.ManyToManyField(Movies)
+    recipes = models.ManyToManyField(Recipe)
 
     user_description_short = models.CharField(default='', max_length=500)
     user_description_long = models.CharField(default='', max_length=1000)
@@ -38,7 +46,6 @@ class Recommendations(models.Model):
     def __str__(self):
         return f'{self.userId} with model {self.recommendation_model}'
     
-
 class UserRankings(models.Model):
     userId = models.CharField(max_length=200)
     movieId = models.IntegerField()
@@ -50,3 +57,18 @@ class UserRankings(models.Model):
 class FinalResult(models.Model):
     userId = models.CharField(max_length=200)
     answers = models.JSONField()
+ 
+
+def directory_path(insatnce, filename):
+    return f'images/loadedimage/{filename}'
+
+class Image(models.Model):
+    options = (
+        ('active', 'Active'),
+        ('deactivated', 'Deactivated')
+    )
+    title = models.CharField(max_length=250)
+    alt = models.TextField()
+    image = models.ImageField(upload_to=directory_path, height_field=None, width_field=None, max_length=None)
+    slug = models.SlugField()
+    status = models.CharField(max_length=11, choices = options, default = 'active')
