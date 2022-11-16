@@ -5,56 +5,39 @@ import Submit from '../../components/Submit.astro';
 import BoolMultiple from '../../components/BoolMultiple.astro';
 import RecipesGeneration from '../../components/RecipesGeneration.astro';
 import Likard from '../../components/Likard.astro';
+import Boolean from '../../components/Boolean.astro';
 
 import Loading from '../../components/Loading.astro';
 ---
 <QForm title='Generation'>
-    <RecipesGeneration title='' body='These are your recommendations! Please have a look and move on.'></RecipesGeneration>
-    <Likard
+    <h2 class="instructions">These are your recommendations! Please look at both, and answer the questions below!</h2>
+    <RecipesGeneration title='' body=''></RecipesGeneration>
+    <Boolean
     questionId="1"
-    body="The items recommended to me match my interests">
-    </Likard>
+    body="Which of the two selections would you say fit your preferences best?">
+    </Boolean>
 
     <Likard
     questionId="2"
-    body="The recommender helped me find the ideal item.">
+    body="I found selections A and selection B to be simular">
     </Likard>
 
     <Likard
     questionId="3"
-    body="I think I would enjoy watching the chosen movie.">
-    </Likard>
-
-    <Likard
-    questionId="4"
-    body="I could pick more than one movie from the recommended list.">
+    body="Out of the two selections, the selection i chose fit my preferences well.">
     </Likard>
 
 
-    <Likard
-    questionId="5"
-    body="I did not find any of the recommended movies interesting to me.">
-    </Likard>
-    
-    <Likard
-    questionId="6"
-    body="Overall, I am satisfied with the recommender.">
-    </Likard>
-
-    <Likard
-    questionId="7"
-    body="The recommender can be trusted.">
-    </Likard>
-
-    <Likard
-    questionId="8"
-    body="I would use this recommender again. ">
-    </Likard>
-    
-    <Likard
-    questionId="9"
-    body="The recommendations contained highly popular movies.">
-    </Likard>
-
-    <Submit redirect="/" final={true}></Submit>
+    <Submit redirect="/thanks" final={true}></Submit>
 </QForm>
+
+<style>
+    .instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		background: #575091;
+		padding: 1.0rem;
+		border-radius: 0.4rem;
+		color: var(--color-bg);
+	}
+</style>

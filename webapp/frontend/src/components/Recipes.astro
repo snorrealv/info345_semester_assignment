@@ -14,7 +14,7 @@ export interface Props {
 
 const {url = 'http://0.0.0.0/api/recipes/initial', title, body, questionId, maxtime=20000} = Astro.props;
 const settings = '../../config.json'
-const n = 5
+const n = 10
 const n_rec = []
 Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 
@@ -25,12 +25,13 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 			{body}
 		</h3>
 	<div id="loading"></div>
-
+	<div class="food-container">
 	{n_rec.map((item) => (
 		<>
 		<RecipeDiv id={`${item}`} title='Yes'></RecipeDiv>
 		</>
 	))}
+	</div>
 	</div>
 </li>
 
@@ -65,7 +66,6 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 			holder.dataset.id=element.recipe_id
 			image.src = `http://0.0.0.0/api/images/${element.recipe_id}.jpg`
 			title.textContent = element.recipe_name
-			content.textContent = element.description
 			console.log(element.recipe_id)
 		})
 		console.log(data)
@@ -101,11 +101,15 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 		width: 96%;
 		padding: 1em 1.3em;
 		border-radius: 0.35rem;
-		opacity: 0.8;
 		background-color: white;
 		list-style: none;
 	}
 
+	.food-container {
+		display: flex;
+		flex-wrap: wrap;
+		
+	}
 	.likard > .likard-cont-mov > .forms {
 		display: flex;
 		justify-content: center;

@@ -11,6 +11,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = '__all__'
 
+class RecipeRankedSerializer(serializers.Serializer):
+    recipe = RecipeSerializer()
 
 class SubmissionSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only = True)
@@ -39,7 +41,7 @@ class ImageSerializerField(serializers.Field):
 class RecommendationSerializer(serializers.Serializer):
     userId = serializers.CharField()
     recommendation_model = serializers.CharField()
-    recipes = RecipeSerializer(many=True)
+    recipes = RecipeRankedSerializer(many=True)
 
 class UserRankingsSerializer(serializers.Serializer):
     userId = serializers.CharField()

@@ -1,8 +1,9 @@
 from django.contrib import admin
-from handler.models import Submission, Recommendations, UserRankings, FinalResult, Recipe, Image
+from handler.models import Submission, Recommendations, UserRankings, FinalResult, Recipe, Image, RecipeRanked
 # Register your models here.
 admin.site.register(Submission)
 admin.site.register(Recipe)
+admin.site.register(RecipeRanked)
 
 # https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#django.contrib.admin.ModelAdmin.filter_vertical
 # The Genre page is wonky due to the nature of many to many, so if applicable this can be implemented

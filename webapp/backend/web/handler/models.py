@@ -11,6 +11,10 @@ class Recipe(models.Model):
     description = models.TextField()
     image_url = models.CharField(max_length=200)
 
+class RecipeRanked(models.Model):
+    id = models.AutoField(primary_key=True)
+    recipe = models.ForeignKey("handler.Recipe", on_delete=models.CASCADE)
+    rank = models.IntegerField()
 
 class Submission(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -37,7 +41,7 @@ class Recommendations(models.Model):
     #     return {"movies":["a","b","c"]}
     
     # #movies = models.JSONField('Recommendation', default=movies_default)
-    recipes = models.ManyToManyField(Recipe)
+    recipes = models.ManyToManyField(RecipeRanked)
 
     user_description_short = models.CharField(default='', max_length=500)
     user_description_long = models.CharField(default='', max_length=1000)

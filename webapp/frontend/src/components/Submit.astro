@@ -19,6 +19,7 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 <button class="form-submit-button">Next</button>
 
 <script is:inline define:vars={{train, final, redirect, recipes}}>
+
 	document.addEventListener("click", function(e) {
 		 if (e.target && e.target.matches('button.form-submit-button')) {
 			console.log("HIT BUTTON")
@@ -60,6 +61,9 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 			})
 			
 			if (notFilled.length == 0) {
+				console.log('Supposed to be sent')
+				console.log(jsonObj)
+				console.log(movieRatings)
 				makeCallRatings(movieRatings, url).then(() => makeCallRed(jsonObj, url))
 			}
 			else {
@@ -323,6 +327,7 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 	}
 
 	async function makeCallRatings(ratings, url) {
+		console.log('sent ratings', ratings)
 		await fetch("http://0.0.0.0/api/submissions/rating/", {
 			// Adding method type
 			mode: 'cors',
@@ -377,7 +382,7 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 		var expires = "";
 		if (days) {
 			var date = new Date();
-			date.setTime(date.getTime() + 30*60000);
+			date.setTime(date.getTime() + 1440*60000);
 			expires = "; expires=" + date.toUTCString();
 		}
 		document.cookie = name + "=" + (value || "")  + expires + "; path=/";

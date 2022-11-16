@@ -99,7 +99,7 @@ class ImageApiView(generics.RetrieveAPIView):
 
 class StartingRecipes(APIView):
     def get_object(self):
-        starting_recipes = ['1880','1924', '2006', '2055', '1854']
+        starting_recipes = ['1880','107', '2006', '2055', '134','237','391','1510','4422','9661']
         try:
             return Recipe.objects.filter(recipe_id__in=starting_recipes)
         except:

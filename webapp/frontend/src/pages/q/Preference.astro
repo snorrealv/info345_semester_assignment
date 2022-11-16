@@ -7,9 +7,9 @@ import Recipes from '../../components/Recipes.astro';
 import BoolMultiple from '../../components/BoolMultiple.astro';
 ---
 <QForm title='Preference'>
-    <h2 class="instructions">Please tell us a bit about your preferences:</h2>
-    <Recipes title='' body='With the information present and your previous experience, please rate the following recipes, then click next.' questionId="1"></Recipes>
-    <Submit redirect="Generation" train={true} recipes={true}></Submit>
+    <h2 class="instructions">Given the information available, what would you rate these dished based on your personal preference?</h2>
+    <Recipes title='' body='With the information present and your personal preference, please rate the following recipes, then click next.' questionId="1"></Recipes>
+    <Submit redirect="/training" train={true} recipes={true}></Submit>
 </QForm>
 
 <style>

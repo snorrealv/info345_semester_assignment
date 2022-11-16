@@ -1,5 +1,5 @@
 * [ ] Sette opp WebApp - Snorre
-  * [ ] Sette opp
+  * [X] Sette opp
   * [ ] Tilpasse brukerstudie
   * [ ] Implementere nye algorytmer
 * [X] Bygge Basic Rec - Carl/Vanessa

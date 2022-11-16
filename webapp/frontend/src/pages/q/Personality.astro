@@ -10,7 +10,7 @@ import Checkbox from '../../components/Checkbox.astro';
 ---
 <QForm title='Personality'>
 
-    <h2 class="instructions">Now tell us a bit more about your personality:</h2>
+    <h2 class="instructions"></h2>
 
     <BoolMultiple 
         title="I see myself as extraverted, enthusiastic."
@@ -65,13 +65,3 @@ import Checkbox from '../../components/Checkbox.astro';
     <Submit client:load redirect="Generation"></Submit>
 </QForm>
 
-<style>
-    .instructions {
-		line-height: 1.6;
-		margin: 1rem 0;
-		background: #575091;
-		padding: 1.0rem;
-		border-radius: 0.4rem;
-		color: var(--color-bg);
-	}
-</style>

@@ -1,11 +1,11 @@
 ---
 export interface Props {
-    title: string,
+    title?: string,
     body: string,
     href?: string,
 	questionId: string,
 }
-const {href, title, body, questionId} = Astro.props;
+const {href, title = '', body, questionId} = Astro.props;
 
 ---
 
@@ -14,23 +14,23 @@ const {href, title, body, questionId} = Astro.props;
 	<div class="likard-cont">
 		<a href={href}>
 			<h2>
-				{questionId}.{title}
+				Q{questionId}.
 			</h2>
 			<p>
 				{body}
 				<slot/>
 			</p>
 		</a>
-		<div class="forms">
-		<form id={questionId} required>
-            <label for='true'>
+		<div>
+		<form class="radioBoolForm" id={questionId}>
+            <label class='labelclass' for='true'>
 				<input type='radio' name={questionId} value='true'>
-				True
+				A
 			</label>
 
-			<label for='false'>
+			<label class='labelclass' for='false'>
 				<input type='radio' name={questionId} value='false'>
-				False
+				B
 			</label>
 		</form>
 		</div>
@@ -40,10 +40,16 @@ const {href, title, body, questionId} = Astro.props;
 
 <style>
 
-	:root {
-		--link-gradient2: linear-gradient(45deg, #4F39FA, #DA62C4 5%, var(--color-border) 10%);
-		--link-gradient: linear-gradient(45deg, #F1F1F1, #221f20 5%, var(--color-border) 10%);
+	.labelclass {
+		transform: scale(1.5); 
+		font-size: 20px;
+		margin: 0 2rem 0 0;
 	}
+
+
+	input[type='radio'] { 
+     transform: scale(1.5); 
+ 	}
 
 	.likard {
 		margin-bottom: 1rem;

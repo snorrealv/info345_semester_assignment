@@ -57,7 +57,7 @@ services:
     command: celery -A web.celery worker -l INFO
     volumes:
       - ./backend/web:/web
-      - ./backend/data:/data
+      - ../data:/data
     environment:
       - DB_HOST=db
       - DB_NAME=web
