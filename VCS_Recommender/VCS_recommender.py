@@ -10,7 +10,11 @@ class VCS_recommender:
         self.original_recommendation = None
 
 
-    def __get_orignial_recommendation(self, user_id):
+    def __get_orignial_recommendation(self, user_id, new_data = None):
+        if new_data:
+            for i in new_data["recipes"]:
+                print(i)
+                self.base_recommendation_model.add_new_data(i[0],i[1],i[2])
         recommendation = self.base_recommendation_model.recommend(user_id=user_id, top_recipes=30)
         self.original_recommendation = recommendation.reset_index(drop=True)
 
@@ -22,10 +26,11 @@ class VCS_recommender:
 
     @staticmethod
     def __new_rank(margin, sim, star):
+        algoweight = 1
         star_rating = {'1':-2, '2':-1, '3':0, '4':1, '5':2}
         simweight = margin - ((1-sim)*100)
         # print(f'{star}, {star_rating[star]}, {margin},ss {(1-sim)*100}, {sim}, {simweight}')
-        return star_rating[star] * (simweight * 0.5)
+        return star_rating[star] * (simweight * algoweight)
 
 
     def __findsimular(self, id:int, values = None, submission = None):
@@ -60,7 +65,7 @@ class VCS_recommender:
         return values
 
 
-    def recommend(self, user_id, submission = None,):
+    def recommend(self, user_id, submission = None, new_data = None):
         
         if not submission:
             submission = {"1854": "5", "1880": "4", "1924": "5", "2006": "4", "2055": "1","7011": "5", "6002": "4", "5967": "5", "5003": "4", "9319": "1"}
@@ -69,7 +74,8 @@ class VCS_recommender:
 
         values = self.__getvalues(submission)
         new_values = []
-        self.__get_orignial_recommendation(user_id)
+        self.__get_orignial_recommendation(user_id, new_data)
+        print(self.original_recommendation.to_latex())
         for rec in self.original_recommendation.itertuples():
             new_values.append([rec.recipe, rec.predicted_rating, rec.Index, self.__findsimular(rec.recipe, values=values, submission=submission),])
 
@@ -77,10 +83,11 @@ class VCS_recommender:
             if value[-1]:
                 new_values[key].append((value[2]+1)-value[-1])
             # print(findsimular(rec.recipe, values=values, submission=submission))
-        final_df = pd.DataFrame(new_values, columns=['recipe_id', 'predicted_rating','index','simularity_adjustment','new_index'])
+        final_df = pd.DataFrame(new_values, columns=['recipe', 'predicted_rating','index','simularity_adjustment','new_index'])
         final_df = final_df.sort_values(by='new_index')
 
         return final_df
+
 
 rec = VCS_recommender()
 l = rec.recommend(455)

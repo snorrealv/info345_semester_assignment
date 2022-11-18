@@ -99,9 +99,11 @@ class ImageApiView(generics.RetrieveAPIView):
 
 class StartingRecipes(APIView):
     def get_object(self):
+        n = Recipe.objects.values_list('recipe_id',flat = True)
+        pick = random.choices(n, k=10)
         starting_recipes = ['1880','107', '2006', '2055', '134','237','391','1510','4422','9661']
         try:
-            return Recipe.objects.filter(recipe_id__in=starting_recipes)
+            return Recipe.objects.filter(recipe_id__in=pick)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

@@ -12,7 +12,7 @@ export interface Props {
 }
 
 
-const {url = 'http://0.0.0.0/api/recipes/initial', title, body, questionId, maxtime=20000} = Astro.props;
+const {url = 'https://vcs.mediafutures.no/api/recipes/initial', title, body, questionId, maxtime=20000} = Astro.props;
 const settings = '../../config.json'
 const n = 10
 const n_rec = []
@@ -64,7 +64,7 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 			content = holder.querySelector('#content')
 
 			holder.dataset.id=element.recipe_id
-			image.src = `http://0.0.0.0/api/images/${element.recipe_id}.jpg`
+			image.src = `https://vcs.mediafutures.no/api/images/${element.recipe_id}.jpg`
 			title.textContent = element.recipe_name
 			console.log(element.recipe_id)
 		})

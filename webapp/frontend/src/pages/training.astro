@@ -1,14 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="Welcome to Astro.">
+<Layout title="Training ...">
 	<main>
 		<h2><center>Training your data ... &#128526</center></h2>
+		<h5><center>This will take a few seconds</center></h5>
 	</main>
 </Layout>
 
 <script is:inline>
-	setTimeout(function() {window.location.href = '/q/Generation'}, 1000);
+	setTimeout(function() {window.location.href = '/q/Generation'}, 2000);
 
 function myStopFunction() {
   clearTimeout(myTimeout);

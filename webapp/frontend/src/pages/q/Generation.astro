@@ -1,13 +1,9 @@
 ---
 import QForm from '../../layouts/Question-form.astro';
-import Movie from '../../components/Movie.astro';
 import Submit from '../../components/Submit.astro';
-import BoolMultiple from '../../components/BoolMultiple.astro';
 import RecipesGeneration from '../../components/RecipesGeneration.astro';
 import Likard from '../../components/Likard.astro';
 import Boolean from '../../components/Boolean.astro';
-
-import Loading from '../../components/Loading.astro';
 ---
 <QForm title='Generation'>
     <h2 class="instructions">These are your recommendations! Please look at both, and answer the questions below!</h2>
@@ -19,7 +15,7 @@ import Loading from '../../components/Loading.astro';
 
     <Likard
     questionId="2"
-    body="I found selections A and selection B to be simular">
+    body="I found selections A and selection B to be similar">
     </Likard>
 
     <Likard

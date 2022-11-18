@@ -1,14 +1,12 @@
 ---
 import QForm from '../../layouts/Question-form.astro';
-import Movie from '../../components/Movie.astro';
 import Submit from '../../components/Submit.astro';
-import MovieSearch from '../../components/MovieSearch.astro';
 import Recipes from '../../components/Recipes.astro';
 import BoolMultiple from '../../components/BoolMultiple.astro';
 ---
 <QForm title='Preference'>
     <h2 class="instructions">Given the information available, what would you rate these dished based on your personal preference?</h2>
-    <Recipes title='' body='With the information present and your personal preference, please rate the following recipes, then click next.' questionId="1"></Recipes>
+    <Recipes title='' body='With the information present and your personal preference, please rate the following recipes, then click next. The star to the far left indicates 1, the star to the far right indicates 5, if you see no images, please refresh the page :)' questionId="1"></Recipes>
     <Submit redirect="/training" train={true} recipes={true}></Submit>
 </QForm>
 
