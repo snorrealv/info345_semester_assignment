@@ -1,7 +1,6 @@
 ## Setup guide for RecSys Framework
 
 ### Backend Cold start:
-When pulling this repo for the first time, ensure that the handler app URL call is commented out in `backend/web/web/urls.py`.
 
 Step 1:
 From the root of the folder, run `docker-compose up --build`
@@ -12,9 +11,11 @@ Open a new terminal and enter into the web container with the following command:
 
 Step 3:
 Load data into database with the following command:
-Here you can choose between script args 25m / 1m or no arguments (-latest-small)
 
-`python manage.py runscript csv-input --script-args 25m`
+`python manage.py load-item-profiles`
+
+After this load the items into the database:
+`python manage.py add-images-to-db`
 
 Step 4:
 Create your super user:

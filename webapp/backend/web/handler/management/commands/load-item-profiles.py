@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
-    help = 'Choose a movieset to load into database'
+    help = 'Choose a itemset to load into database'
     def add_arguments(self, parser):
         # Positional arguments 
         parser.add_argument('--file',
