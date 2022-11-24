@@ -2,8 +2,14 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
+import warnings
+
+# Ignoring pandas waring for the append function.
+
 class CF_recommender:
-    df = pd.read_csv("../user-item-rating.csv",  on_bad_lines='skip', sep = '\t', names = ['user_id', 'item_id', 'rating'])
+    # Ignoring pandas waring for the append function.
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    df = pd.read_csv("../data/all_recipes/user-item-rating.csv",  on_bad_lines='skip', sep = '\t', names = ['user_id', 'item_id', 'rating'])
     num_similar_users = 21
 
     def __init__():
@@ -15,9 +21,9 @@ class CF_recommender:
         ratings_matrix = df.pivot_table(values='rating', index='user_id', columns='item_id')
         return ratings_matrix
     
-    def add_new_data(user_id, item_id, rating):
+    def add_new_data(user_id, item_id:int, rating:int):
         df = CF_recommender.df
-        new_row = {'user_id': user_id, 'item_id': item_id, 'rating': rating}
+        new_row = {'user_id': user_id, 'item_id': int(item_id), 'rating': int(rating)}
         CF_recommender.df = df.append(new_row, ignore_index = True)
     
     # saved to file if applicable
@@ -91,5 +97,4 @@ class CF_recommender:
 
         return recipes_to_recommend
 
-    
 

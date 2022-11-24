@@ -8,12 +8,7 @@ from .models import Recommendations, Recipe, RecipeRanked
 @shared_task(bind=True)
 def run_recommendations(self, userId, data, model = None):
 
-    # Incoming Data:
-    # {"userID": userID, "movies": [movieID, movieID, movieID...]}
-    print(data)
-
-    # Delete any previous recommendation made with ALS that is not a rerank
-    # rerank to be added later
+    # Delete any previous recommendation made for a single user
     try:
         prev_rec = Recommendations.objects.get(userId = userId, recommendation_model=model)
         prev_rec.delete()
@@ -31,11 +26,6 @@ def run_recommendations(self, userId, data, model = None):
         recommendation_data = Recommender.recommend(user_id=int(userId), top_recipes=30)
         
         print('CF', recommendation_data)
-    #Recommender = als_recommender.ALSRecommender()
-    #userId = int(userId)
-    #Recommender.run_recommender(user_data=data, user_id=userId)
-    #data = Recommender.recs
-    #model = 'ALS'
 
     # ==================== VCS ==========================
     if model == 'VCS':
@@ -47,19 +37,8 @@ def run_recommendations(self, userId, data, model = None):
 
     # ==================== --- ==========================
         print('VCS', recommendation_data)
-
-    # recommendation.recipes.add(Recipe.objects.get(recipe_id = objec))
-
-    # Find new, if there are two for some reason, pick one of them.
-    # this filter()[:1].get() step is to avoid edge cases where the user went back and called 
-    # the model twice. This also happends in the view and it always picks [:1]
-    # recommendation = Recommendations.objects.filter(userId = userId, recommendation_model='NaN')[:1].get()
-
     for objec in recommendation_data.itertuples():
         recipe = RecipeRanked(recipe = Recipe.objects.get(recipe_id = objec.recipe), rank=1)
         recipe.save()
         recommendation_object.recipes.add(recipe)
         recommendation_object.save()
-    
-    # recommendation.recommendation_model = model
-    # recommendation.save()

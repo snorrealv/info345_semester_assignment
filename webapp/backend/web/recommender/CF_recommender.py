@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 class CF_recommender:
-    df = pd.read_csv("/data/user-item-rating.csv",  on_bad_lines='skip', sep = '\t', names = ['user_id', 'item_id', 'rating'])
+    df = pd.read_csv("/data/all_recipes/user-item-rating.csv",  on_bad_lines='skip', sep = '\t', names = ['user_id', 'item_id', 'rating'])
     num_similar_users = 21
 
     def __init__():

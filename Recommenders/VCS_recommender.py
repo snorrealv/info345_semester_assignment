@@ -3,7 +3,12 @@ import pandas as pd
 import numpy as np
 from CF_recommender import CF_recommender
 
+import warnings
+
+
 class VCS_recommender:
+    # Ignoring pandas waring for the append function.
+    warnings.filterwarnings("ignore", category=FutureWarning)
     def __init__(self):
         self.base_recommendation_model = CF_recommender
         self.df = pd.read_csv('../data/features.csv')
@@ -13,7 +18,6 @@ class VCS_recommender:
     def __get_orignial_recommendation(self, user_id, new_data = None):
         if new_data:
             for i in new_data["recipes"]:
-                print(i)
                 self.base_recommendation_model.add_new_data(i[0],i[1],i[2])
         recommendation = self.base_recommendation_model.recommend(user_id=user_id, top_recipes=30)
         self.original_recommendation = recommendation.reset_index(drop=True)
@@ -74,7 +78,6 @@ class VCS_recommender:
         values = self.__getvalues(submission)
         new_values = []
         self.__get_orignial_recommendation(user_id, new_data)
-        print(self.original_recommendation.to_latex())
         for rec in self.original_recommendation.itertuples():
             new_values.append([rec.recipe, rec.predicted_rating, rec.Index, self.__findsimular(rec.recipe, values=values, submission=submission),])
 
@@ -86,8 +89,3 @@ class VCS_recommender:
         final_df = final_df.sort_values(by='new_index')
 
         return final_df
-
-
-rec = VCS_recommender()
-l = rec.recommend(80477)
-print(l[['recipe','simularity_adjustment','new_index']])

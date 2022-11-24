@@ -6,7 +6,7 @@ from .CF_recommender import CF_recommender
 class VCS_recommender:
     def __init__(self):
         self.base_recommendation_model = CF_recommender
-        self.df = pd.read_csv('/data/features.csv')
+        self.df = pd.read_csv('/data/all_recipes/features.csv')
         self.original_recommendation = None
 
 
