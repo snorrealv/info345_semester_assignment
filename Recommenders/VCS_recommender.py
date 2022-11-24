@@ -66,10 +66,9 @@ class VCS_recommender:
 
 
     def recommend(self, user_id, submission = None, new_data = None):
-        
+        # If no submission is given use this default selection: (Only for testing)
         if not submission:
-            submission = {"1854": "5", "1880": "4", "1924": "5", "2006": "4", "2055": "1","7011": "5", "6002": "4", "5967": "5", "5003": "4", "9319": "1"}
-
+            submission = {"1854": "5", "1880": "4", "1924": "5", "2002": "2", "2055": "1","7011": "5", "6002": "4", "5967": "5", "5003": "4", "50": "1"}
         final = []
 
         values = self.__getvalues(submission)
@@ -81,7 +80,7 @@ class VCS_recommender:
 
         for key, value in enumerate(new_values):
             if value[-1]:
-                new_values[key].append((value[2]+1)-value[-1])
+                new_values[key].append((value[2])-value[-1])
             # print(findsimular(rec.recipe, values=values, submission=submission))
         final_df = pd.DataFrame(new_values, columns=['recipe', 'predicted_rating','index','simularity_adjustment','new_index'])
         final_df = final_df.sort_values(by='new_index')
@@ -90,5 +89,5 @@ class VCS_recommender:
 
 
 rec = VCS_recommender()
-l = rec.recommend(455)
-print(l)
+l = rec.recommend(80477)
+print(l[['recipe','simularity_adjustment','new_index']])

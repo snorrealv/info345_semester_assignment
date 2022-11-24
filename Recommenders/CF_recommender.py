@@ -20,6 +20,7 @@ class CF_recommender:
         new_row = {'user_id': user_id, 'item_id': item_id, 'rating': rating}
         CF_recommender.df = df.append(new_row, ignore_index = True)
     
+    # saved to file if applicable
     def save_df_to_file():
         CF_recommender.df.to_csv('./df_CF_recommender.csv')
 

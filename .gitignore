@@ -411,10 +411,13 @@ data/all_recipes/item-profiles3.csv
 data/all_recipes/readme.txt
 data/all_recipes/user-item-rating.csv
 
-webapp/backend/data/als_US
-webapp/backend/data/ml_1m
-webapp/backend/data/ml-1m
-webapp/backend/data/ml-latest-small
-webapp/backend/web/handler/migrations
+# Due to size
+data/images
 
 lecture_notes
+
+old-files
+.venv
+.ipynb_checkpoints
+.idea
+.vscode
