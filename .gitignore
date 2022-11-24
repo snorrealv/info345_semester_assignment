@@ -412,7 +412,7 @@ data/all_recipes/readme.txt
 data/all_recipes/user-item-rating.csv
 
 # Due to size
-data/images
+# data/images
 
 lecture_notes
 
