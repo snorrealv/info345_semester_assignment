@@ -23,7 +23,7 @@ onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 onlyfiles = [f.replace('.jpg', '') for f in onlyfiles]
 #print(onlyfiles)
 
-df = pd.read_csv('item-profiles2.csv',  on_bad_lines='skip', sep = ';')
+df = pd.read_csv('data/item-profiles2.csv',  on_bad_lines='skip', sep = ';')
 def scrape(id, name):
     print('INITUALIZED')
     def getsoup(url):

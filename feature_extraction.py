@@ -2,7 +2,7 @@ import pandas as pd
 from os import listdir
 from os.path import isfile, join
 from tqdm import tqdm
-from VCS_Recommender.features import Features
+from features import Features
 
 mypath = 'data/images'
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
