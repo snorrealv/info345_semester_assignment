@@ -5,18 +5,18 @@
 	<meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <title>Generation</title>
-<link rel="stylesheet" href="/assets/Generation.985fce9f.css" />
-<link rel="stylesheet" href="/assets/Generation.4ed6f5f3.css" /></head>
+<link rel="stylesheet" href="/assets/Generation.6ae5e60f.css" />
+<link rel="stylesheet" href="/assets/Generation.bf27c9ac.css" /></head>
 <body class="astro-DXEP6ZML">
   <main class="astro-DXEP6ZML">
-	<h2 class="instructions astro-62BWNLFU">These are your recommendations! Please look at both, and answer the questions below!</h2><li class="food-container-main astro-B2KG2GU4">
-	<div class="likard-cont-two astro-B2KG2GU4" id="div_undefined">
-		<h3 class="astro-B2KG2GU4">
+	<h2 class="instructions astro-62BWNLFU">These are your recommendations! Please look at both, and answer the questions below!</h2><li class="food-container-main astro-2NK5Z3DH">
+	<div class="likard-cont-two astro-2NK5Z3DH" id="div_undefined">
+		<h3 class="astro-2NK5Z3DH">
 			
 		</h3>
-	<div class="foodbg astro-B2KG2GU4">
-	<h2 class="astro-B2KG2GU4">Selection A</h2>
-	<div id="first" class="food-container astro-B2KG2GU4">
+	<div class="foodbg astro-2NK5Z3DH">
+	<h2 class="astro-2NK5Z3DH">Selection A</h2>
+	<div id="first" class="food-container astro-2NK5Z3DH">
 
 	<div class="recipe_holder astro-NWERFA7T" id="recipe_holder_0" data-id="1">
     <div class="recipe_information astro-NWERFA7T">
@@ -322,10 +322,10 @@
 	</div>
 	</div>
 	
-	<div class="foodbg astro-B2KG2GU4">
-	<h2 id="B" class="astro-B2KG2GU4">Selection B</h2>
+	<div class="foodbg astro-2NK5Z3DH">
+	<h2 id="B" class="astro-2NK5Z3DH">Selection B</h2>
 
-	<div id="second" class="food-container astro-B2KG2GU4">
+	<div id="second" class="food-container astro-2NK5Z3DH">
 
 		<div class="recipe_holder astro-NWERFA7T" id="recipe_holder_0" data-id="1">
     <div class="recipe_information astro-NWERFA7T">
@@ -634,7 +634,7 @@
 </li>
 
 <script defer>(function(){const maxtime = 20000;
-const url = "https://vcs.mediafutures.no/api/recipes/initial";
+const url = "http://0.0.0.0/api/recipes/initial";
 
     // Function that grabs dynamicly delivered Recipes based on userId
     // This will need to be inserted into the main form page, and not on each 
@@ -658,10 +658,10 @@ const url = "https://vcs.mediafutures.no/api/recipes/initial";
     async function loadContent() {
 		uID = await getCookie('uId')
 		console.log(uID)
-		var data2 = await getRecipes(`https://vcs.mediafutures.no/api/recommendation/${uID}/VCS`)
+		var data2 = await getRecipes(`http://0.0.0.0/api/recommendation/${uID}/VCS`)
 		console.log(data2)
 		while (data2.recipes.length === 0) {
-			data2 = await getRecipes(`https://vcs.mediafutures.no/api/recommendation/${uID}/VCS`)
+			data2 = await getRecipes(`http://0.0.0.0/api/recommendation/${uID}/VCS`)
 		}
 		data2.recipes.map((element, index) => {
 			first = document.getElementById('second')
@@ -672,14 +672,14 @@ const url = "https://vcs.mediafutures.no/api/recipes/initial";
 			
 			console.log(element.recipe.recipe)
 			holder.dataset.id=element.recipe.recipe_id
-			image.src = `https://vcs.mediafutures.no/api/images/${element.recipe.recipe_id}.jpg`
+			image.src = `http://0.0.0.0/api/images/${element.recipe.recipe_id}.jpg`
 			image.alt = element.recipe.recipe_id
 			title.textContent = element.recipe.recipe_name
 			// content.textContent = element.recipe.description
 			console.log(element.recipe.recipe_id)
 		})
 
-		var data = await getRecipes(`https://vcs.mediafutures.no/api/recommendation/${uID}/CF`)
+		var data = await getRecipes(`http://0.0.0.0/api/recommendation/${uID}/CF`)
 		console.log(data)
 		data.recipes.map((element, index) => {
 			first = document.getElementById('first')
@@ -690,7 +690,7 @@ const url = "https://vcs.mediafutures.no/api/recipes/initial";
 			
 			console.log(element.recipe.recipe)
 			holder.dataset.id=element.recipe.recipe_id
-			image.src = `https://vcs.mediafutures.no/api/images/${element.recipe.recipe_id}.jpg`
+			image.src = `http://0.0.0.0/api/images/${element.recipe.recipe_id}.jpg`
 			image.alt = element.recipe.recipe_id
 			title.textContent = element.recipe.recipe_name
 			// content.textContent = element.recipe.description
@@ -835,7 +835,7 @@ const url = "https://vcs.mediafutures.no/api/recipes/initial";
 </li>
 
 
-<button class="form-submit-button astro-JABOBZGH">Next</button>
+<button class="form-submit-button astro-NT2EP44T">Next</button>
 
 <script>(function(){const train = false;
 const final = true;
@@ -1125,7 +1125,7 @@ const recipes = false;
 
 	// Post function not in use as we use makeCallRed() with a redirect
 	function makeCall(answers) {
-		fetch("https://vcs.mediafutures.no/api/submissions/", {
+		fetch("http://0.0.0.0/api/submissions/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",
@@ -1151,7 +1151,7 @@ const recipes = false;
 
 	async function makeCallRatings(ratings, url) {
 		console.log('sent ratings', ratings)
-		await fetch("https://vcs.mediafutures.no/api/submissions/rating/", {
+		await fetch("http://0.0.0.0/api/submissions/rating/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",
@@ -1177,7 +1177,7 @@ const recipes = false;
 
 	// Makes call and redirects to next page
 	function makeCallRed(answers, url) {
-		fetch("https://vcs.mediafutures.no/api/submissions/", {
+		fetch("http://0.0.0.0/api/submissions/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",

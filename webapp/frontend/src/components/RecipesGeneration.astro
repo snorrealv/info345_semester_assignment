@@ -12,7 +12,7 @@ export interface Props {
 }
 
 
-const {url = 'https://vcs.mediafutures.no/api/recipes/initial', title, body, questionId, maxtime=20000} = Astro.props;
+const {url = 'http://0.0.0.0/api/recipes/initial', title, body, questionId, maxtime=20000} = Astro.props;
 const settings = '../../config.json'
 const n = 30
 const n_rec = []
@@ -74,10 +74,10 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
     async function loadContent() {
 		uID = await getCookie('uId')
 		console.log(uID)
-		var data2 = await getRecipes(`https://vcs.mediafutures.no/api/recommendation/${uID}/VCS`)
+		var data2 = await getRecipes(`http://0.0.0.0/api/recommendation/${uID}/VCS`)
 		console.log(data2)
 		while (data2.recipes.length === 0) {
-			data2 = await getRecipes(`https://vcs.mediafutures.no/api/recommendation/${uID}/VCS`)
+			data2 = await getRecipes(`http://0.0.0.0/api/recommendation/${uID}/VCS`)
 		}
 		data2.recipes.map((element, index) => {
 			first = document.getElementById('second')
@@ -88,14 +88,14 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 			
 			console.log(element.recipe.recipe)
 			holder.dataset.id=element.recipe.recipe_id
-			image.src = `https://vcs.mediafutures.no/api/images/${element.recipe.recipe_id}.jpg`
+			image.src = `http://0.0.0.0/api/images/${element.recipe.recipe_id}.jpg`
 			image.alt = element.recipe.recipe_id
 			title.textContent = element.recipe.recipe_name
 			// content.textContent = element.recipe.description
 			console.log(element.recipe.recipe_id)
 		})
 
-		var data = await getRecipes(`https://vcs.mediafutures.no/api/recommendation/${uID}/CF`)
+		var data = await getRecipes(`http://0.0.0.0/api/recommendation/${uID}/CF`)
 		console.log(data)
 		data.recipes.map((element, index) => {
 			first = document.getElementById('first')
@@ -106,7 +106,7 @@ Array.from({ length: n }, (x, i) => {n_rec.push(i)})
 			
 			console.log(element.recipe.recipe)
 			holder.dataset.id=element.recipe.recipe_id
-			image.src = `https://vcs.mediafutures.no/api/images/${element.recipe.recipe_id}.jpg`
+			image.src = `http://0.0.0.0/api/images/${element.recipe.recipe_id}.jpg`
 			image.alt = element.recipe.recipe_id
 			title.textContent = element.recipe.recipe_name
 			// content.textContent = element.recipe.description

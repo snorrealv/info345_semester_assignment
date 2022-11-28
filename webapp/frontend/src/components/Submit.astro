@@ -302,7 +302,7 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 
 	// Post function not in use as we use makeCallRed() with a redirect
 	function makeCall(answers) {
-		fetch("https://vcs.mediafutures.no/api/submissions/", {
+		fetch("http://0.0.0.0/api/submissions/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",
@@ -328,7 +328,7 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 
 	async function makeCallRatings(ratings, url) {
 		console.log('sent ratings', ratings)
-		await fetch("https://vcs.mediafutures.no/api/submissions/rating/", {
+		await fetch("http://0.0.0.0/api/submissions/rating/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",
@@ -354,7 +354,7 @@ const {id, redirect, train = false, final= false, recipes = false} = Astro.props
 
 	// Makes call and redirects to next page
 	function makeCallRed(answers, url) {
-		fetch("https://vcs.mediafutures.no/api/submissions/", {
+		fetch("http://0.0.0.0/api/submissions/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",

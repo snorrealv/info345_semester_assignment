@@ -5,17 +5,17 @@
 	<meta name="viewport" content="width=device-width">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <title>Preference</title>
-<link rel="stylesheet" href="/assets/Generation.985fce9f.css" />
-<link rel="stylesheet" href="/assets/Preference.56824fd6.css" /></head>
+<link rel="stylesheet" href="/assets/Generation.6ae5e60f.css" />
+<link rel="stylesheet" href="/assets/Preference.a541b4a1.css" /></head>
 <body class="astro-DXEP6ZML">
   <main class="astro-DXEP6ZML">
-	<h2 class="instructions astro-G452ZHWZ">Given the information available, what would you rate these dished based on your personal preference?</h2><li class="likard astro-UMUSWD2C">
-	<div class="likard-cont-mov astro-UMUSWD2C" id="div_1">
-		<h3 class="astro-UMUSWD2C">
+	<h2 class="instructions astro-G452ZHWZ">Given the information available, what would you rate these dished based on your personal preference?</h2><li class="likard astro-XJWSYUYT">
+	<div class="likard-cont-mov astro-XJWSYUYT" id="div_1">
+		<h3 class="astro-XJWSYUYT">
 			With the information present and your personal preference, please rate the following recipes, then click next. The star to the far left indicates 1, the star to the far right indicates 5, if you see no images, please refresh the page :)
 		</h3>
-	<div id="loading" class="astro-UMUSWD2C"></div>
-	<div class="food-container astro-UMUSWD2C">
+	<div id="loading" class="astro-XJWSYUYT"></div>
+	<div class="food-container astro-XJWSYUYT">
 	<div class="recipe_holder astro-XC3YQ47R" id="recipe_holder_0" data-id="1">
     <div class="recipe_information astro-XC3YQ47R">
         <h5 id="title" class="astro-XC3YQ47R">Title</h5>
@@ -382,7 +382,7 @@
 </li>
 
 <script defer>(function(){const maxtime = 20000;
-const url = "https://vcs.mediafutures.no/api/recipes/initial";
+const url = "http://0.0.0.0/api/recipes/initial";
 
     // Function that grabs dynamicly delivered Recipes based on userId
     // This will need to be inserted into the main form page, and not on each 
@@ -412,7 +412,7 @@ const url = "https://vcs.mediafutures.no/api/recipes/initial";
 			content = holder.querySelector('#content')
 
 			holder.dataset.id=element.recipe_id
-			image.src = `https://vcs.mediafutures.no/api/images/${element.recipe_id}.jpg`
+			image.src = `http://0.0.0.0/api/images/${element.recipe_id}.jpg`
 			title.textContent = element.recipe_name
 			console.log(element.recipe_id)
 		})
@@ -432,7 +432,7 @@ const url = "https://vcs.mediafutures.no/api/recipes/initial";
 
 
 <!-- We have to make this global to avoid Astro hydrating it alongside the rest. -->
-<button class="form-submit-button astro-JABOBZGH">Next</button>
+<button class="form-submit-button astro-NT2EP44T">Next</button>
 
 <script>(function(){const train = true;
 const final = false;
@@ -722,7 +722,7 @@ const recipes = true;
 
 	// Post function not in use as we use makeCallRed() with a redirect
 	function makeCall(answers) {
-		fetch("https://vcs.mediafutures.no/api/submissions/", {
+		fetch("http://0.0.0.0/api/submissions/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",
@@ -748,7 +748,7 @@ const recipes = true;
 
 	async function makeCallRatings(ratings, url) {
 		console.log('sent ratings', ratings)
-		await fetch("https://vcs.mediafutures.no/api/submissions/rating/", {
+		await fetch("http://0.0.0.0/api/submissions/rating/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",
@@ -774,7 +774,7 @@ const recipes = true;
 
 	// Makes call and redirects to next page
 	function makeCallRed(answers, url) {
-		fetch("https://vcs.mediafutures.no/api/submissions/", {
+		fetch("http://0.0.0.0/api/submissions/", {
 			// Adding method type
 			mode: 'cors',
 			method: "POST",

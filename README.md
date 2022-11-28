@@ -100,9 +100,9 @@ This is the folder housing both our recommenders, these are built as objects so 
 
         Recommender = VCS_recommender.VCS_recommender()
         recommendation_data = Recommender.recommend(new_data=data, user_id=int(userId))
-
-    # ==================== --- ==========================
         print('VCS', recommendation_data)
+    # ==================== --- ==========================
+
     for objec in recommendation_data.itertuples():
         recipe = RecipeRanked(recipe = Recipe.objects.get(recipe_id = objec.recipe), rank=1)
         recipe.save()

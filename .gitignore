@@ -421,5 +421,4 @@ old-files
 .ipynb_checkpoints
 .idea
 .vscode
-
-backend/web/handler/migrations/*
+webapp/backend/web/handler/migrations/*
